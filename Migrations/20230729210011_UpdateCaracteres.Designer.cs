@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using apiprueba;
 
@@ -11,9 +12,11 @@ using apiprueba;
 namespace apiprueba.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230729210011_UpdateCaracteres")]
+    partial class UpdateCaracteres
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -385,6 +388,9 @@ namespace apiprueba.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("Peso_Modulo")
+                        .HasColumnType("int");
+
                     b.Property<int>("TipoCompetenciaId_Tipo_Competencia")
                         .HasColumnType("int");
 
@@ -737,6 +743,10 @@ namespace apiprueba.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)")
                         .HasColumnOrder(2);
+
+                    b.Property<int>("Peso_Tipo_Competencia")
+                        .HasColumnType("int")
+                        .HasColumnOrder(3);
 
                     b.HasKey("Id_Tipo_Competencia");
 

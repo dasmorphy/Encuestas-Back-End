@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using apiprueba;
 
@@ -11,9 +12,11 @@ using apiprueba;
 namespace apiprueba.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230729191748_TipoCompetenciaModel")]
+    partial class TipoCompetenciaModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,8 +377,8 @@ namespace apiprueba.Migrations
 
                     b.Property<string>("Definicion")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.Property<DateTime>("Fecha_Creacion")
                         .HasColumnType("datetime2");
@@ -384,6 +387,9 @@ namespace apiprueba.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Peso_Modulo")
+                        .HasColumnType("int");
 
                     b.Property<int>("TipoCompetenciaId_Tipo_Competencia")
                         .HasColumnType("int");
@@ -663,8 +669,8 @@ namespace apiprueba.Migrations
 
                     b.Property<string>("Pregunta")
                         .IsRequired()
-                        .HasMaxLength(350)
-                        .HasColumnType("nvarchar(350)")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
                         .HasColumnOrder(5);
 
                     b.Property<int>("Tipo_Evaluacion_Id")
@@ -737,6 +743,10 @@ namespace apiprueba.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)")
                         .HasColumnOrder(2);
+
+                    b.Property<int>("Peso_Tipo_Competencia")
+                        .HasColumnType("int")
+                        .HasColumnOrder(3);
 
                     b.HasKey("Id_Tipo_Competencia");
 

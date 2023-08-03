@@ -16,7 +16,7 @@ namespace apiprueba.Models
         public int Modulo_Id { get; set; }
 
         [Column(Order = 5)]
-        [StringLength(maximumLength: 250)]
+        [StringLength(maximumLength: 350)]
         public string Pregunta { get; set; } = null!;
 
         [Column(Order = 6)]

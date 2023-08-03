@@ -23,6 +23,7 @@ namespace apiprueba
 
         public DbSet<CargosModel> Cargos => Set<CargosModel>();
         public DbSet<PreguntasModuloCargo> PreguntasModuloCargo => Set<PreguntasModuloCargo>();
+        public DbSet<TipoCompetenciaModel> TipoCompetencia => Set<TipoCompetenciaModel>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -74,6 +75,13 @@ namespace apiprueba
             .HasOne(u => u.EvaluacionModel)
             .WithOne(p => p.ObservacionModel)
             .HasForeignKey<ObservacionModel>(p => p.Evaluacion_id);
+
+            modelBuilder.Entity<TipoEvaluacionModel>()
+                .HasMany(b => b.PreguntasByEvaluacionModel)
+                .WithOne(p => p.TipoEvaluacionModel)
+                .HasForeignKey(p => p.Tipo_Evaluacion_Id)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }
