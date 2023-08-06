@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using apiprueba;
 using OfficeOpenXml;
+using apiprueba.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<IModuloPreguntasService, ModuloPreguntasService>();
 
 
 var app = builder.Build();

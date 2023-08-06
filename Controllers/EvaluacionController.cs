@@ -1,8 +1,13 @@
 ﻿using apiprueba.DTO;
 using apiprueba.Models;
+using apiprueba.Services;
 using AutoMapper;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using System.Globalization;
 using System.Reflection;
 
 
@@ -17,11 +22,13 @@ namespace apiprueba.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        private readonly IModuloPreguntasService moduloPreguntasService;
 
-        public EvaluacionController(ApplicationDbContext context, IMapper mapper)
+        public EvaluacionController(ApplicationDbContext context, IMapper mapper, IModuloPreguntasService moduloPreguntasService)
         {
             this.context = context;
             this.mapper = mapper;
+            this.moduloPreguntasService = moduloPreguntasService;
         }
 
         [HttpGet]
@@ -81,6 +88,317 @@ namespace apiprueba.Controllers
                     return BadRequest("No se encontraron evaluaciones");
                 }
                 return Ok(evaluaciones);
+            }
+        }
+
+        //Metodo para la exportacion del archivo excel de la tabla Evaluaciones
+
+        [HttpGet("exportarEvaluaciones")]
+        async public Task<IActionResult> ExportarEvaluaciones([FromQuery] string estadosSeleccionados)
+        {
+            try
+            {
+                List<string> estados = estadosSeleccionados.Split(',').ToList();
+
+                var evaluaciones = context.Evaluacion.ToList();
+
+                if (estados != null && estados.Count > 0)
+                {
+                    evaluaciones = evaluaciones.Where(c => estados.Contains(c.Estado)).ToList();
+                }
+
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Evaluaciones");
+
+                    // Agregar encabezados
+                    worksheet.Cells[1, 1].Value = "Evaluador";
+                    worksheet.Cells[1, 2].Value = "Identificacion del Evaluador";
+                    worksheet.Cells[1, 3].Value = "Evaluado";
+                    worksheet.Cells[1, 4].Value = "Identificacion del Evaluado";
+                    worksheet.Cells[1, 5].Value = "Fecha";
+                    worksheet.Cells[1, 6].Value = "Calificacion Final";
+                    worksheet.Cells[1, 7].Value = "Estado";
+
+                    int row = 2; // Fila donde comenzar a agregar datos
+
+                    foreach (var evaluacion in evaluaciones)
+                    {
+                        var colaborador = await context.Colaborador.FirstOrDefaultAsync(c => c.Id_Colaborador == evaluacion.Colaborador_id);
+                        var usuario = await context.Usuarios.FirstOrDefaultAsync(u => u.Id_Usuario == evaluacion.Usuario_id);
+
+                        if (colaborador != null && usuario != null)
+                        {
+                            string nombreColaborador = colaborador.Nombres;
+                            string usuarioNombre = usuario.Usuario;
+
+                            decimal? calificacionFinal = evaluacion.CalificacionFinal;
+                            string formatoFecha = "dd/MM/yyyy";
+
+                            var preguntaModuloResult = await moduloPreguntasService.ObtenerModulosConPreguntas(usuario.Cargo_Id);
+
+                            //var preguntaModuloResult = preguntaModuloResultTask.Result;
+
+                            if (preguntaModuloResult != null && preguntaModuloResult != null)
+                            {
+                                int currentColumn = 8; // Inicializar en la columna 8
+
+                                foreach (var moduloPregunta in preguntaModuloResult)
+                                {
+                                    if (moduloPregunta.PreguntasByEvaluacionModel != null && moduloPregunta.PreguntasByEvaluacionModel.Count > 0)
+                                    {
+                                        worksheet.Cells[1, currentColumn].Value = moduloPregunta.Nombre_Modulo;
+
+                                        var preguntaByEvaluacion = moduloPregunta.PreguntasByEvaluacionModel[0];
+
+                                        var pregunta = preguntaByEvaluacion.Pregunta;
+                                        var numeroPregunta = preguntaByEvaluacion.Numero_Pregunta;
+
+                                        string propertyName = $"Clfc_Pregunta{numeroPregunta}";
+
+                                        // Se utiliza reflexión para acceder a la propiedad de evaluación
+                                        var propertyInfo = evaluacion.GetType().GetProperty(propertyName);
+                                        if (propertyInfo != null)
+                                        {
+                                            var propertyValue = propertyInfo.GetValue(evaluacion);
+                                            worksheet.Cells[row, currentColumn].Value = propertyValue;
+                                        }
+                                        //row++;
+                                        currentColumn++;
+                                    }
+                                }
+                            }
+
+                            // Agregar datos a la fila actual
+                            worksheet.Cells[row, 1].Value = usuarioNombre;
+                            worksheet.Cells[row, 2].Value = usuario.Identificacion;
+                            worksheet.Cells[row, 3].Value = nombreColaborador;
+                            worksheet.Cells[row, 4].Value = colaborador.Cedula;
+                            worksheet.Cells[row, 5].Value = evaluacion.Fecha_Creacion;
+                            worksheet.Cells[row, 6].Value = calificacionFinal;
+                            worksheet.Cells[row, 7].Value = evaluacion.Estado;
+
+                            worksheet.Cells[row, 5].Style.Numberformat.Format = formatoFecha;
+
+                            row++; // Avanzar a la siguiente fila
+
+                        }
+
+                    }
+
+                    // Autoajustar las columnas
+                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                    byte[] result = package.GetAsByteArray();
+
+                    // Devolver el archivo Excel
+                    return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Evaluaciones.xlsx");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al generar el archivo Excel." + ex.Message);
+            }
+        }
+
+
+        //Metodo para la exportacion del archivo excel de la tabla Evaluaciones
+
+        [HttpGet("evaluacionesRoles")]
+        async public Task<IActionResult> ExportarEvaluacionesRoles([FromQuery] string estadosSeleccionados)
+        {
+            try
+            {
+                List<string> estados = estadosSeleccionados.Split(',').ToList();
+
+                byte[] result = null;
+
+                var evaluaciones = context.Evaluacion.ToList();
+
+                if (estados != null && estados.Count > 0)
+                {
+                    evaluaciones = evaluaciones.Where(c => estados.Contains(c.Estado)).ToList();
+                }
+
+                var colaboradoresIds = evaluaciones.Select(evaluacion => evaluacion.Colaborador_id).Distinct().ToList();
+
+                var colaboradores = await context.Colaborador
+                    .Where(colaborador => colaboradoresIds.Contains(colaborador.Id_Colaborador))
+                    .ToListAsync();
+
+                var evaluacionesAgrupadas = evaluaciones
+                    .GroupBy(evaluacion => colaboradores.FirstOrDefault(colaborador => colaborador.Id_Colaborador == evaluacion.Colaborador_id)?.Nombres)
+                    .Select(grupo => new {
+                        ColaboradorNombre = grupo.Key,
+                        Evaluaciones = grupo.ToList(),
+                        ColaboradorIdentificacion = colaboradores.FirstOrDefault(colaborador => colaborador.Nombres == grupo.Key)?.Cedula,
+                    })
+                    .ToList();
+
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Evaluaciones");
+
+                    // Agregar encabezados
+                    worksheet.Cells[1, 1].Value = "Evaluado";
+                    worksheet.Cells[1, 2].Value = "Identificacion del Evaluado";
+                    worksheet.Cells[1, 3].Value = "JEFE";
+                    worksheet.Cells[1, 4].Value = "CLIENTE";
+                    worksheet.Cells[1, 5].Value = "EQUIPO";
+                    worksheet.Cells[1, 6].Value = "Calificacion Final";
+
+                    int row = 2; // Fila donde comenzar a agregar datos
+
+                    foreach (var grupo in evaluacionesAgrupadas)
+                    {
+                        var colaboradorNombre = grupo.ColaboradorNombre;
+                        var evaluacionesDelColaborador = grupo.Evaluaciones;
+
+                        worksheet.Cells[row, 1].Value = colaboradorNombre;
+                        worksheet.Cells[row, 2].Value = grupo.ColaboradorIdentificacion;
+                        decimal? calificacionFinal = 0;
+                        decimal? valorResultante = 0;
+
+                        foreach (var evaluacion in evaluacionesDelColaborador)
+                        {
+                            var usuario = await context.Usuarios.FirstOrDefaultAsync(u => u.Id_Usuario == evaluacion.Usuario_id);
+                            var cargo = await context.Cargos.FirstOrDefaultAsync(u => u.Id_Cargo == usuario.Cargo_Id);
+
+                            if (cargo != null && usuario != null)
+                            {
+                                if (cargo.Nombre_Cargo == "Jefaturas")
+                                {
+                                    if (usuario.Grupo == "JEFE")
+                                    {
+                                        decimal? porcentajeGrupo = 0.40M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
+                                                                                                                    //decimal? valorMaximo = 5;
+
+                                        //decimal? porcentajeOriginal = (valorResultante / valorMaximo) * 100;
+
+                                        //Console.WriteLine($"Valor Resultante: {valorResultante} => Porcentaje Original: {porcentajeOriginal}%");
+                                        valorResultante += valorCalificacion;
+
+
+                                        worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+
+                                    if (usuario.Grupo == "CLIENTE")
+                                    {
+                                        decimal? porcentajeGrupo = 0.40M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
+                                        valorResultante += valorCalificacion;
+                                        worksheet.Cells[row, 4].Value = valorCalificacion;
+                                    }
+
+                                    if (usuario.Grupo == "EQUIPO")
+                                    {
+                                        decimal? porcentajeGrupo = 0.20M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
+                                        valorResultante += valorCalificacion;
+                                        worksheet.Cells[row, 5].Value = valorCalificacion;
+                                    }
+                                }
+
+                                else if (cargo.Nombre_Cargo == "Supervisores" || cargo.Nombre_Cargo == "Gestor")
+                                {
+                                    if (usuario.Grupo == "JEFE")
+                                    {
+                                        decimal? porcentajeGrupo = 0.60M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;
+                                        valorResultante += valorCalificacion;
+                                        worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+
+                                    if (usuario.Grupo == "EQUIPO")
+                                    {
+                                        decimal? porcentajeGrupo = 0.40M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
+                                        valorResultante += valorCalificacion;
+                                        worksheet.Cells[row, 5].Value = valorCalificacion;
+                                    }
+                                }
+
+                                else if (cargo.Nombre_Cargo == "Coordinador")
+                                {
+                                    if (usuario.Grupo == "JEFE")
+                                    {
+                                        decimal? porcentajeGrupo = 0.60M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;
+                                        valorResultante += valorCalificacion;
+                                        worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+
+                                    if (usuario.Grupo == "CLIENTE")
+                                    {
+                                        decimal? porcentajeGrupo = 0.40M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
+                                        valorResultante += valorCalificacion;
+                                        worksheet.Cells[row, 4].Value = valorCalificacion;
+                                    }
+                                }
+
+                                else if (cargo.Nombre_Cargo == "Analista" || cargo.Nombre_Cargo == "Vendedor" || cargo.Nombre_Cargo == "Auxiliar")
+                                {
+                                    if (usuario.Grupo == "JEFE")
+                                    {
+                                        decimal? porcentajeGrupo = 1.00M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;
+                                        valorResultante += valorCalificacion;
+                                        worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+                                }
+
+                                else if (cargo.Nombre_Cargo == "Administrador")
+                                {
+                                    if (usuario.Grupo == "JEFE")
+                                    {
+                                        decimal? porcentajeGrupo = 0.50M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;
+                                        valorResultante += valorCalificacion;
+                                        worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+
+                                    if (usuario.Grupo == "EQUIPO")
+                                    {
+                                        decimal? porcentajeGrupo = 0.50M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
+                                        valorResultante += valorCalificacion;
+                                        worksheet.Cells[row, 5].Value = valorCalificacion;
+                                    }
+                                }
+
+                                string usuarioNombre = usuario.Usuario;
+
+                            }
+                        }
+                        
+                        calificacionFinal += valorResultante;
+                        worksheet.Cells[row, 6].Value = calificacionFinal;
+
+                        row++;
+                    }
+
+                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                    result = package.GetAsByteArray();
+                }
+
+                if (result != null)
+                {
+                    // Devolver el archivo Excel
+                    return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Evaluaciones.xlsx");
+
+                }
+                else
+                {
+                    return BadRequest("Ocurrio un error al generar el archivo");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al generar el archivo Excel." + ex.Message);
             }
         }
 
@@ -837,6 +1155,11 @@ namespace apiprueba.Controllers
 
             if (evaluacionBD == null)
                 return BadRequest("Evaluacion no encontrada");
+
+            var colaborador = await context.Colaborador.FirstAsync(c => c.Id_Colaborador == evaluacionBD.Colaborador_id);
+
+            //Se actualiza el estado del colaborador
+            colaborador.Estado = "No Evaluado";
 
             context.Remove(evaluacionBD);
             await context.SaveChangesAsync();

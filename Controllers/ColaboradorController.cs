@@ -82,15 +82,17 @@ namespace apiprueba.Controllers
         //Metodo para la exportacion del archivo excel de la tabla Colaboradores
 
         [HttpGet("exportarColaboradores")]
-        public IActionResult ExportarPersonas([FromQuery] List<string> estadosSeleccionados)
+        public IActionResult ExportarPersonas([FromQuery] string estadosSeleccionados)
         {
             try
             {
+                List<string> estados = estadosSeleccionados.Split(',').ToList();
+
                 var colaboradores = context.Colaborador.ToList();
 
-                if (estadosSeleccionados != null && estadosSeleccionados.Count > 0)
+                if (estados != null && estados.Count > 0)
                 {
-                    colaboradores = colaboradores.Where(c => estadosSeleccionados.Contains(c.Estado)).ToList();
+                    colaboradores = colaboradores.Where(c => estados.Contains(c.Estado)).ToList();
                 }
 
                 string formatoFecha = "dd/MM/yyyy";

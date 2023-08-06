@@ -152,6 +152,7 @@ namespace apiprueba.Controllers
             usuarioBD.RolesModel = rolModel;
             usuarioBD.Cargo_Id = usuarioDtoPut.Cargo_Id;
             usuarioBD.CargosModel = cargoModel;
+            usuarioBD.Grupo = usuarioDtoPut.Grupo;
 
             context.Update(usuarioBD);
             await context.SaveChangesAsync();

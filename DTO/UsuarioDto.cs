@@ -22,6 +22,8 @@ namespace apiprueba.DTO
         [StringLength(maximumLength: 12)]
         public string Password { get; set; } = null!;
 
+        [StringLength(maximumLength: 30)]
+        public string Grupo { get; set; } = null!;
         public int Rol_Id { get; set; }
         public int Cargo_Id { get; set; }
     }
@@ -39,6 +41,9 @@ namespace apiprueba.DTO
 
         [StringLength(maximumLength: 12)]
         public string Password { get; set; } = null!;
+
+        [StringLength(maximumLength: 30)]
+        public string Grupo { get; set; } = null!;
         public int Rol_Id { get; set; }
         public int Cargo_Id { get; set; }
     }
