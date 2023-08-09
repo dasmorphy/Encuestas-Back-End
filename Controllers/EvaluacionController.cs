@@ -1021,6 +1021,10 @@ namespace apiprueba.Controllers
             { 
                 var evaluacionDtoPut = evaluacionObservacionPut.evaluacionDtoPut;
                 var observacionDtoPut = evaluacionObservacionPut.observacionDtoPut;
+                decimal competenciaOrganizacional = 0M;
+                decimal competenciaEstrategica = 0M;
+                decimal competenciaFuncional = 0M;
+                var cargoUsuario = "";
 
                 if (id_Evaluacion != evaluacionDtoPut.Id_Evaluacion)
                     return BadRequest("Los id no coinciden");
@@ -1034,6 +1038,80 @@ namespace apiprueba.Controllers
 
                 if (observacionBD == null)
                     return BadRequest("Observaciones de la evaluacion no encontrada");
+
+                var usuarioExist = await context.Usuarios.FirstOrDefaultAsync(u => u.Id_Usuario == evaluacionBD.Usuario_id);
+
+                if (usuarioExist != null)
+                {
+                    var cargo = await context.Cargos.FirstOrDefaultAsync(x => x.Id_Cargo == usuarioExist.Cargo_Id);
+
+                    if (cargo != null)
+                    {
+                        if (cargo.Nombre_Cargo == "Jefaturas")
+                        {
+                            cargoUsuario = cargo.Nombre_Cargo;
+                            competenciaOrganizacional = 0.20M;
+                            competenciaEstrategica = 0.50M;
+                            competenciaFuncional = 0.30M;
+                        }
+                        else if (cargo.Nombre_Cargo == "Supervisores")
+                        {
+                            cargoUsuario = cargo.Nombre_Cargo;
+                            competenciaOrganizacional = 0.20M;
+                            competenciaEstrategica = 0.40M;
+                            competenciaFuncional = 0.40M;
+                        }
+                        else if (cargo.Nombre_Cargo == "Coordinador")
+                        {
+                            cargoUsuario = cargo.Nombre_Cargo;
+                            competenciaOrganizacional = 0.20M;
+                            competenciaEstrategica = 0.30M;
+                            competenciaFuncional = 0.50M;
+                        }
+                        else if (cargo.Nombre_Cargo == "Gestor")
+                        {
+                            cargoUsuario = cargo.Nombre_Cargo;
+                            competenciaOrganizacional = 0.20M;
+                            competenciaEstrategica = 0.20M;
+                            competenciaFuncional = 0.60M;
+                        }
+                        else if (cargo.Nombre_Cargo == "Analista")
+                        {
+                            cargoUsuario = cargo.Nombre_Cargo;
+                            competenciaOrganizacional = 0.20M;
+                            competenciaFuncional = 0.80M;
+                        }
+                        else if (cargo.Nombre_Cargo == "Administrador")
+                        {
+                            cargoUsuario = cargo.Nombre_Cargo;
+                            competenciaOrganizacional = 0.20M;
+                            competenciaEstrategica = 0.10M;
+                            competenciaFuncional = 0.70M;
+                        }
+                        else if (cargo.Nombre_Cargo == "Vendedor")
+                        {
+                            cargoUsuario = cargo.Nombre_Cargo;
+                            competenciaOrganizacional = 0.20M;
+                            competenciaFuncional = 0.80M;
+                        }
+                        else if (cargo.Nombre_Cargo == "Auxiliar")
+                        {
+                            cargoUsuario = cargo.Nombre_Cargo;
+                            competenciaOrganizacional = 0.20M;
+                            competenciaFuncional = 0.80M;
+                        }
+                    }
+
+                }
+
+                decimal? sumaClfcPregunta = 0;
+                decimal? primerCompetencia = 0M;
+                decimal? segundaCompetencia = 0M;
+                decimal? terceraCompetencia = 0M;
+
+                var preguntasCargoo = await context.PreguntasModuloCargo
+                                                .Where(x => x.Cargo_Id == usuarioExist.Cargo_Id)
+                                                .ToListAsync();
 
                 // Actualizar solo los campos que no sean nulos en el modelo DTO
                 var properties = typeof(EvaluacionPutDto).GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -1058,20 +1136,479 @@ namespace apiprueba.Controllers
                     }
                 }
 
-                // Calcular la suma de las calificaciones
-                decimal sumaClfcPregunta = 0;
-                for (int i = 1; i <= 52; i++)
+                foreach (var preguntas in preguntasCargoo)
                 {
-                    var property = typeof(EvaluacionPutDto).GetProperty($"Clfc_Pregunta{i}", BindingFlags.Public | BindingFlags.Instance);
-                    if (property != null && property.PropertyType == typeof(decimal?))
+
+                    //Se obtiene la pregunta referente al modulo y tipo de evaluacion
+                    var modulo = await context.ModuloEvaluacion.FirstOrDefaultAsync(x => x.Id_Modulo_Evaluacion == preguntas.Modulo_Id);
+                    var preguntasByModulo = await context.PreguntasByEvaluacion
+                                            .Where(x => x.Modulo_Id == preguntas.Modulo_Id)
+                                            .Where(x => x.Tipo_Evaluacion_Id == preguntas.Tipo_Evaluacion_Id)
+                                            .ToListAsync();
+                    if (preguntasByModulo.Count > 0)
                     {
-                        decimal? calificacion = (decimal?)property.GetValue(evaluacionDtoPut);
-                        if (calificacion != null)
+                        foreach (var pregunta in preguntasByModulo)
                         {
-                            sumaClfcPregunta += calificacion.Value;
+                            string propertyName = $"Clfc_Pregunta{pregunta.Numero_Pregunta}";
+
+                            // Obtener el PropertyInfo del objeto EvaluacionPostDto
+                            PropertyInfo propertyInfo = typeof(EvaluacionPutDto).GetProperty(propertyName);
+
+
+                            if (propertyInfo != null)
+                            {
+                                decimal? value = (decimal?)propertyInfo.GetValue(evaluacionDtoPut);
+
+                                Console.WriteLine($"Pregunta {pregunta.Numero_Pregunta}: {value}");
+
+
+                                if (modulo != null)
+                                {
+                                    var tipoCompetencia = await context.TipoCompetencia.FirstOrDefaultAsync(x => x.Id_Tipo_Competencia == modulo.Tipo_Competencia_Id);
+                                    if (tipoCompetencia != null)
+                                    {
+                                        if (tipoCompetencia.Nombre == "COMPETENCIAS ORGANIZACIONALES")
+                                        {
+
+                                            if (cargoUsuario == "Jefaturas")
+                                            {
+                                                if (modulo.Nombre_Modulo == "Orientación al Servicio")
+                                                {
+                                                    decimal pesoModulo = 0.40M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Trabajo en Equipo")
+                                                {
+                                                    decimal pesoModulo = 0.20M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Orientación a los Resultados")
+                                                {
+                                                    decimal pesoModulo = 0.30M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Diversidad e Inclusión")
+                                                {
+                                                    decimal pesoModulo = 0.10M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                            }
+
+                                            else if (cargoUsuario == "Supervisores")
+                                            {
+
+                                                if (modulo.Nombre_Modulo == "Orientación al Servicio")
+                                                {
+                                                    decimal pesoModulo = 0.35M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Trabajo en Equipo")
+                                                {
+                                                    decimal pesoModulo = 0.20M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Orientación a los Resultados")
+                                                {
+                                                    decimal pesoModulo = 0.30M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Diversidad e Inclusión")
+                                                {
+                                                    decimal pesoModulo = 0.15M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                            }
+
+                                            else if (cargoUsuario == "Coordinador")
+                                            {
+
+                                                if (modulo.Nombre_Modulo == "Orientación al Servicio")
+                                                {
+                                                    decimal pesoModulo = 0.30M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Trabajo en Equipo")
+                                                {
+                                                    decimal pesoModulo = 0.30M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Orientación a los Resultados")
+                                                {
+                                                    decimal pesoModulo = 0.30M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Diversidad e Inclusión")
+                                                {
+                                                    decimal pesoModulo = 0.10M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                            }
+
+                                            else if (cargoUsuario == "Gestor")
+                                            {
+
+                                                if (modulo.Nombre_Modulo == "Orientación al Servicio")
+                                                {
+                                                    decimal pesoModulo = 0.40M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Trabajo en Equipo")
+                                                {
+                                                    decimal pesoModulo = 0.20M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Orientación a los Resultados")
+                                                {
+                                                    decimal pesoModulo = 0.25M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Diversidad e Inclusión")
+                                                {
+                                                    decimal pesoModulo = 0.15M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                            }
+
+                                            else if (cargoUsuario == "Analista")
+                                            {
+
+                                                if (modulo.Nombre_Modulo == "Orientación al Servicio")
+                                                {
+                                                    decimal pesoModulo = 0.35M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Trabajo en Equipo")
+                                                {
+                                                    decimal pesoModulo = 0.30M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Orientación a los Resultados")
+                                                {
+                                                    decimal pesoModulo = 0.25M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Diversidad e Inclusión")
+                                                {
+                                                    decimal pesoModulo = 0.10M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                            }
+
+                                            else if (cargoUsuario == "Administrador")
+                                            {
+
+                                                if (modulo.Nombre_Modulo == "Orientación al Servicio")
+                                                {
+                                                    decimal pesoModulo = 0.40M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Trabajo en Equipo")
+                                                {
+                                                    decimal pesoModulo = 0.15M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Orientación a los Resultados")
+                                                {
+                                                    decimal pesoModulo = 0.30M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Diversidad e Inclusión")
+                                                {
+                                                    decimal pesoModulo = 0.15M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                            }
+
+                                            else if (cargoUsuario == "Vendedor" || cargoUsuario == "Auxiliar")
+                                            {
+
+                                                if (modulo.Nombre_Modulo == "Orientación al Servicio")
+                                                {
+                                                    decimal pesoModulo = 0.40M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Trabajo en Equipo")
+                                                {
+                                                    decimal pesoModulo = 0.25M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Orientación a los Resultados")
+                                                {
+                                                    decimal pesoModulo = 0.20M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                                else if (modulo.Nombre_Modulo == "Diversidad e Inclusión")
+                                                {
+                                                    decimal pesoModulo = 0.15M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    primerCompetencia += value;
+                                                }
+                                            }
+
+                                        }
+                                        else if (tipoCompetencia.Nombre == "COMPETENCIAS ESTRATÉGICAS Y GESTIÓN")
+                                        {
+                                            if (cargoUsuario == "Jefaturas")
+                                            {
+                                                if (modulo.Nombre_Modulo == "Pensamiento creativo e innovador")
+                                                {
+                                                    decimal pesoModulo = 0.40M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Liderazgo")
+                                                {
+                                                    decimal pesoModulo = 0.35M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Planificación, seguimiento y control")
+                                                {
+                                                    decimal pesoModulo = 0.25M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                            }
+
+                                            else if (cargoUsuario == "Supervisores")
+                                            {
+                                                if (modulo.Nombre_Modulo == "Pensamiento creativo e innovador")
+                                                {
+                                                    decimal pesoModulo = 0.30M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Liderazgo")
+                                                {
+                                                    decimal pesoModulo = 0.45M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Planificación, seguimiento y control")
+                                                {
+                                                    decimal pesoModulo = 0.25M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                            }
+                                            else if (cargoUsuario == "Coordinador")
+                                            {
+                                                if (modulo.Nombre_Modulo == "Liderazgo")
+                                                {
+                                                    decimal pesoModulo = 0.30M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Planificación, seguimiento y control")
+                                                {
+                                                    decimal pesoModulo = 0.70M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                            }
+                                            else if (cargoUsuario == "Gestor")
+                                            {
+                                                if (modulo.Nombre_Modulo == "Planificación, seguimiento y control")
+                                                {
+                                                    decimal pesoModulo = 1.00M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                            }
+                                            else if (cargoUsuario == "Administrador")
+                                            {
+                                                if (modulo.Nombre_Modulo == "Liderazgo")
+                                                {
+                                                    decimal pesoModulo = 0.80M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Planificación, seguimiento y control")
+                                                {
+                                                    decimal pesoModulo = 0.20M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    segundaCompetencia += value;
+                                                }
+                                            }
+
+                                        }
+
+                                        else if (tipoCompetencia.Nombre == "COMPETENCIAS FUNCIONALES")
+                                        {
+
+                                            if (cargoUsuario == "Jefaturas" || cargoUsuario == "Supervisores")
+                                            {
+
+                                                if (modulo.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
+                                                {
+                                                    decimal pesoModulo = 1.00M;
+                                                    value = value.Value * pesoModulo / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                            }
+                                            else if (cargoUsuario == "Coordinador")
+                                            {
+
+                                                if (modulo.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
+                                                {
+                                                    decimal pesoPensamientoCritico = 0.50M;
+                                                    value = value.Value * pesoPensamientoCritico / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Pensamiento Analítico")
+                                                {
+                                                    decimal pesoPensamientoAnalitico = 0.50M;
+                                                    value = value.Value * pesoPensamientoAnalitico / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                            }
+                                            else if (cargoUsuario == "Gestor")
+                                            {
+
+                                                if (modulo.Nombre_Modulo == "Responsabilidad")
+                                                {
+                                                    decimal pesoResponsabilidad = 0.30M;
+                                                    value = value.Value * pesoResponsabilidad / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Instrucción y Entrenamiento")
+                                                {
+                                                    decimal pesoInstruccion = 0.35M;
+                                                    value = value.Value * pesoInstruccion / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Asesoría y ventas")
+                                                {
+                                                    decimal pesoAsesorias = 0.35M;
+                                                    value = value.Value * pesoAsesorias / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                            }
+                                            else if (cargoUsuario == "Analista")
+                                            {
+
+                                                if (modulo.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
+                                                {
+                                                    decimal pesoPensamiento = 0.10M;
+                                                    value = value.Value * pesoPensamiento / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Responsabilidad")
+                                                {
+                                                    decimal pesoResponsabilidad = 0.40M;
+                                                    value = value.Value * pesoResponsabilidad / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Pensamiento Analítico")
+                                                {
+                                                    decimal pesoPensamientoAnalitico = 0.30M;
+                                                    value = value.Value * pesoPensamientoAnalitico / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Organización del trabajo")
+                                                {
+                                                    decimal pesoTrabajo = 0.20M;
+                                                    value = value.Value * pesoTrabajo / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                            }
+                                            else if (cargoUsuario == "Administrador" || cargoUsuario == "Vendedor")
+                                            {
+                                                if (modulo.Nombre_Modulo == "Responsabilidad")
+                                                {
+                                                    decimal pesoResponsabilidad = 0.40M;
+                                                    value = value.Value * pesoResponsabilidad / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Organización del trabajo")
+                                                {
+                                                    decimal pesoTrabajo = 0.20M;
+                                                    value = value.Value * pesoTrabajo / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Asesoría y ventas")
+                                                {
+                                                    decimal pesoAsesorias = 0.40M;
+                                                    value = value.Value * pesoAsesorias / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                            }
+                                            else if (cargoUsuario == "Auxiliar")
+                                            {
+                                                if (modulo.Nombre_Modulo == "Responsabilidad")
+                                                {
+                                                    decimal pesoResponsabilidad = 0.60M;
+                                                    value = value.Value * pesoResponsabilidad / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Pensamiento Analítico")
+                                                {
+                                                    decimal pesoPensamientoAnalitico = 0.20M;
+                                                    value = value.Value * pesoPensamientoAnalitico / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Organización del trabajo")
+                                                {
+                                                    decimal pesoTrabajo = 0.20M;
+                                                    value = value.Value * pesoTrabajo / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                            }
+
+                                        }
+                                    }
+
+                                }
+
+                            }
+                            else
+                            {
+                                // La propiedad no existe en el objeto, manejar este caso si es necesario
+                                Console.WriteLine("Noexiste");
+                            }
+
                         }
                     }
                 }
+
+                //Se calculan los valores finales multiplancando la variable de cada modulo por el peso del tipo competencia
+                decimal? clfcOrganizacional = primerCompetencia * competenciaOrganizacional;
+                decimal? clfcEstrategica = segundaCompetencia * competenciaEstrategica;
+                decimal? clfcFuncional = terceraCompetencia * competenciaFuncional;
+
+                //Se obtiene primero el porcentaje total para pasarlo como numero decimal a sumaClfcPregunta
+                decimal? porcentajeClfcPregunta = clfcOrganizacional + clfcEstrategica + clfcFuncional;
+
+                sumaClfcPregunta = porcentajeClfcPregunta * 5; //calificacion final de la evaluacion
+
+
                 if (evaluacionBD.Estado == "Realizada") 
                 {
                     var colaboradorBD = await context.Colaborador.FirstOrDefaultAsync(x => x.Id_Colaborador == evaluacionBD.Colaborador_id);

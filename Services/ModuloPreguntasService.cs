@@ -21,7 +21,7 @@ namespace apiprueba.Services
                 .Select(e => new
                 {
                     e.Modulo_Id,
-                    e.Tipo_Evaluacion_Id // Agrega otros campos que desees obtener
+                    e.Tipo_Evaluacion_Id
                 })
                 .ToList();
 
