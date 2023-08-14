@@ -4,6 +4,7 @@ using AutoMapper;
 using static apiprueba.DTO.ColaboradorDto;
 using static apiprueba.DTO.ModuloEvaluacionDto;
 using static apiprueba.DTO.PreguntasByEvaluacionDto;
+using static apiprueba.DTO.ProcesosEvalaucionDto;
 //using static apiprueba.DTO.PreguntasEvaluacionDto;
 
 
@@ -70,6 +71,8 @@ namespace apiprueba.Utils
             //           opt => opt.MapFrom(src => new PreguntasByEvaluacionModel { Id_Preguntas_Tipo = src.Preguntas_Tipo_id }))
 
             .ReverseMap();
+
+            CreateMap<ProcesosEvaluacionDtoPost, FechaProcesosEvaluacionModel>();
         }
     }
 }

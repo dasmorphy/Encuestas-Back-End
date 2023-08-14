@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using apiprueba;
 
@@ -11,9 +12,11 @@ using apiprueba;
 namespace apiprueba.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230811070925_UpdateColaboradorModel")]
+    partial class UpdateColaboradorModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -375,34 +378,6 @@ namespace apiprueba.Migrations
                     b.HasIndex("UsuariosModelId_Usuario");
 
                     b.ToTable("Evaluacion");
-                });
-
-            modelBuilder.Entity("apiprueba.Models.FechaProcesosEvaluacionModel", b =>
-                {
-                    b.Property<int>("Id_Proceso_Evaluacion")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Proceso_Evaluacion"));
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)")
-                        .HasColumnOrder(4);
-
-                    b.Property<DateTime>("Fecha_Fin")
-                        .HasColumnType("datetime2")
-                        .HasColumnOrder(3);
-
-                    b.Property<DateTime>("Fecha_Inicio")
-                        .HasColumnType("datetime2")
-                        .HasColumnOrder(2);
-
-                    b.HasKey("Id_Proceso_Evaluacion");
-
-                    b.ToTable("ProcesosEvaluacion");
                 });
 
             modelBuilder.Entity("apiprueba.Models.ModuloEvaluacionModel", b =>

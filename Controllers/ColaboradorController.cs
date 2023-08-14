@@ -60,7 +60,7 @@ namespace apiprueba.Controllers
             else
             {
                 var colaborador = context.Colaborador
-                .Where(e => e.Cedula_Jefe == usuario.Identificacion)
+                .Where(e => e.Cedula_Evaluador == usuario.Identificacion)
                 .ToList();
                 return Ok(colaborador);
             }
@@ -131,10 +131,10 @@ namespace apiprueba.Controllers
                         worksheet.Cells[i + 2, 7].Value = colaboradores[i].Zona;
                         worksheet.Cells[i + 2, 8].Value = colaboradores[i].Area;
                         worksheet.Cells[i + 2, 9].Value = colaboradores[i].Departamento;
-                        worksheet.Cells[i + 2, 10].Value = colaboradores[i].Cedula_Jefe;
-                        worksheet.Cells[i + 2, 11].Value = colaboradores[i].Nombres_Jefe;
-                        worksheet.Cells[i + 2, 12].Value = colaboradores[i].Fe_Ingreso_Jefe;
-                        worksheet.Cells[i + 2, 13].Value = colaboradores[i].Cargo_Jefe;
+                        worksheet.Cells[i + 2, 10].Value = colaboradores[i].Cedula_Evaluador;
+                        worksheet.Cells[i + 2, 11].Value = colaboradores[i].Nombres_Evaluador;
+                        worksheet.Cells[i + 2, 12].Value = colaboradores[i].Fe_Ingreso_Evaluador;
+                        worksheet.Cells[i + 2, 13].Value = colaboradores[i].Cargo_Evaluador;
                         worksheet.Cells[i + 2, 14].Value = colaboradores[i].Estado;
 
                         worksheet.Cells[i + 2, 3].Style.Numberformat.Format = formatoFecha;
@@ -193,6 +193,41 @@ namespace apiprueba.Controllers
                 foreach (var record in records)
                 {
                     record.Estado = "No Evaluado";
+
+                    var cargo = record.Cargo.Trim().ToLower(); // Convertir a minúsculas y eliminar espacios en blanco
+
+                    if (cargo == "jefaturas")
+                    {
+                        record.Cargo_Id = 1;
+                    }
+                    else if (cargo == "supervisores")
+                    {
+                        record.Cargo_Id = 2;
+                    }
+                    else if (cargo == "coordinador")
+                    {
+                        record.Cargo_Id = 3;
+                    }
+                    else if (cargo == "gestor")
+                    {
+                        record.Cargo_Id = 4;
+                    }
+                    else if (cargo == "analista")
+                    {
+                        record.Cargo_Id = 5;
+                    }
+                    else if (cargo == "administrador")
+                    {
+                        record.Cargo_Id = 6;
+                    }
+                    else if (cargo == "vendedor")
+                    {
+                        record.Cargo_Id = 7;
+                    }
+                    else if (cargo == "auxiliar")
+                    {
+                        record.Cargo_Id = 8;
+                    }
                     //record.Fecha_Creacion = DateTime.Now;
                     context.Colaborador.Add(record);
                 }

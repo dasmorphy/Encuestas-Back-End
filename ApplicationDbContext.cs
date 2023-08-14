@@ -25,6 +25,8 @@ namespace apiprueba
         public DbSet<PreguntasModuloCargo> PreguntasModuloCargo => Set<PreguntasModuloCargo>();
         public DbSet<TipoCompetenciaModel> TipoCompetencia => Set<TipoCompetenciaModel>();
 
+        public DbSet<FechaProcesosEvaluacionModel> ProcesosEvaluacion => Set<FechaProcesosEvaluacionModel>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var calificacionEvaluacionProperties = typeof(EvaluacionModel).GetProperties();

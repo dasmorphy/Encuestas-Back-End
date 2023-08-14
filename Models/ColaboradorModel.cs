@@ -26,12 +26,21 @@ namespace apiprueba.Models
         public string Departamento { get; set; } = null!;
 
         [StringLength(maximumLength: 13)]
-        public string Cedula_Jefe { get; set; } = null!;
-        public string Nombres_Jefe { get; set; } = null!;
+        public string Cedula_Evaluador { get; set; } = null!;
+        public string Nombres_Evaluador { get; set; } = null!;
 
         [Format("dd-MM-yy")]
-        public DateTime Fe_Ingreso_Jefe { get; set; }
-        public string Cargo_Jefe { get; set; } = null!;
+        public DateTime Fe_Ingreso_Evaluador { get; set; }
+        public string Cargo_Evaluador { get; set; } = null!;
+
+        [StringLength(maximumLength: 30)]
+        public string Cargo { get; set; } = null!;
+
+        [StringLength(maximumLength: 20)]
+        public string Grupo { get; set; } = null!;
+
+        [Ignore]
+        public int Cargo_Id { get; set; }
 
         [StringLength(maximumLength: 11)]
         [Ignore]

@@ -25,16 +25,11 @@ namespace apiprueba.Models
         [StringLength(maximumLength: 12)]
         public string Password { get; set; } = null!;
         //public int Tipo_Evaluacion_Id { get; set; }
-
-        [StringLength(maximumLength: 30)]
-        public string Grupo { get; set; } = null!;
-        public int Cargo_Id { get; set; }
         public int Rol_Id { get; set; }
         public DateTime Fecha_Creacion { get; set; }
         public HashSet<EvaluacionModel> Evaluacion { get; set; } = new HashSet<EvaluacionModel>();
         //public TipoEvaluacionModel TipoEvaluacionModel { get; set; } = null!;
         public RolesModel RolesModel { get; set; } = null!;
-        public CargosModel CargosModel { get; set; } = null!;
 
     }
 }

@@ -14,7 +14,5 @@ namespace apiprueba.Models
         public string Nombre_Rol { get; set; } = null!;
         //public int Id_Usuario { get; set; }
         public DateTime Fecha_Creacion { get; set; }
-        public HashSet<UsuariosModel> UsuariosModel { get; set; } = new HashSet<UsuariosModel>();
-
     }
 }

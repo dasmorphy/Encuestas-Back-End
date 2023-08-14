@@ -36,6 +36,7 @@ namespace apiprueba.Controllers
             return Ok(usuarios);
         }
 
+        //Obtiene los datos por el id usuario
         [HttpGet("{id_usuario}")]
         public async Task<ActionResult> Get(int id_usuario)
         {
@@ -43,6 +44,20 @@ namespace apiprueba.Controllers
             if (usuario == null)
             {
                 return BadRequest("Usuario no encontrado");
+            }
+
+            return Ok(usuario);
+        }
+        
+        //Obtiene los datos por el campo usuario
+        [HttpGet("usuario/{usuarioString}")]
+        public async Task<ActionResult> GetDatosByUsuario(string usuarioString)
+        {
+            var usuario = await context.Usuarios.SingleOrDefaultAsync(e => e.Usuario == usuarioString);
+
+            if (usuario == null)
+            {
+                return NotFound("Usuario no encontrado");
             }
 
             return Ok(usuario);
@@ -62,15 +77,9 @@ namespace apiprueba.Controllers
                 return BadRequest("El rol especificado no existe");
             }
 
-            var cargoModel = await context.Cargos.FindAsync(usuarioDto.Cargo_Id);
-            if (cargoModel == null)
-            {
-                return BadRequest("El cargo especificado no existe");
-            }
-
             usuario.Rol_Id = usuarioDto.Rol_Id;
             usuario.RolesModel = rolModel;
-            usuario.CargosModel = cargoModel;
+
             context.Add(usuario);
             await context.SaveChangesAsync();
             return Ok(usuario);
@@ -139,20 +148,11 @@ namespace apiprueba.Controllers
                 return BadRequest("El rol especificado no existe");
             }
 
-            var cargoModel = await context.Cargos.FindAsync(usuarioDtoPut.Cargo_Id);
-            if (cargoModel == null)
-            {
-                return BadRequest("El cargo especificado no existe");
-            }
-
             usuarioBD.Usuario = usuarioDtoPut.Usuario;
             usuarioBD.Password = usuarioDtoPut.Password;
             usuarioBD.Identificacion = usuarioDtoPut.Identificacion;
             usuarioBD.Rol_Id = usuarioDtoPut.Rol_Id;
             usuarioBD.RolesModel = rolModel;
-            usuarioBD.Cargo_Id = usuarioDtoPut.Cargo_Id;
-            usuarioBD.CargosModel = cargoModel;
-            usuarioBD.Grupo = usuarioDtoPut.Grupo;
 
             context.Update(usuarioBD);
             await context.SaveChangesAsync();

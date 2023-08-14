@@ -116,11 +116,13 @@ namespace apiprueba.Controllers
                     worksheet.Cells[1, 2].Value = "Identificacion del Evaluador";
                     worksheet.Cells[1, 3].Value = "Evaluado";
                     worksheet.Cells[1, 4].Value = "Identificacion del Evaluado";
-                    worksheet.Cells[1, 5].Value = "Fecha";
+                    worksheet.Cells[1, 5].Value = "Fecha de evaluacion";
                     worksheet.Cells[1, 6].Value = "Calificacion Final";
                     worksheet.Cells[1, 7].Value = "Estado";
 
                     int row = 2; // Fila donde comenzar a agregar datos
+
+                    HashSet<string> nombresCeldasCreadas = new HashSet<string>(); // Para rastrear los nombres de las celdas creadas
 
                     foreach (var evaluacion in evaluaciones)
                     {
@@ -135,20 +137,18 @@ namespace apiprueba.Controllers
                             decimal? calificacionFinal = evaluacion.CalificacionFinal;
                             string formatoFecha = "dd/MM/yyyy";
 
-                            var preguntaModuloResult = await moduloPreguntasService.ObtenerModulosConPreguntas(usuario.Cargo_Id);
+                            var preguntaModuloResult = await moduloPreguntasService.ObtenerModulosConPreguntas(colaborador.Cargo_Id);
 
                             //var preguntaModuloResult = preguntaModuloResultTask.Result;
 
-                            if (preguntaModuloResult != null && preguntaModuloResult != null)
+                            if (preguntaModuloResult != null)
                             {
                                 int currentColumn = 8; // Inicializar en la columna 8
 
                                 foreach (var moduloPregunta in preguntaModuloResult)
                                 {
                                     if (moduloPregunta.PreguntasByEvaluacionModel != null && moduloPregunta.PreguntasByEvaluacionModel.Count > 0)
-                                    {
-                                        worksheet.Cells[1, currentColumn].Value = moduloPregunta.Nombre_Modulo;
-
+                                    {                                        
                                         var preguntaByEvaluacion = moduloPregunta.PreguntasByEvaluacionModel[0];
 
                                         var pregunta = preguntaByEvaluacion.Pregunta;
@@ -161,7 +161,201 @@ namespace apiprueba.Controllers
                                         if (propertyInfo != null)
                                         {
                                             var propertyValue = propertyInfo.GetValue(evaluacion);
-                                            worksheet.Cells[row, currentColumn].Value = propertyValue;
+                                            if (moduloPregunta.Nombre_Modulo == "Orientación al Servicio")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 8].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 8].Value = propertyValue;
+
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Trabajo en Equipo")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 9].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 9].Value = propertyValue;
+
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Orientación a los Resultados")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 10].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 10].Value = propertyValue;
+                                                
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Diversidad e Inclusión")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 11].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 11].Value = propertyValue;
+                                                
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Pensamiento creativo e innovador")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 12].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 12].Value = propertyValue;
+                                                
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Liderazgo")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 13].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 13].Value = propertyValue;
+                                                
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Planificación, seguimiento y control")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 14].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 14].Value = propertyValue;
+                                                
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 15].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 15].Value = propertyValue;
+                                                
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Responsabilidad")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 16].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 16].Value = propertyValue;
+
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Pensamiento Analítico")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 17].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 17].Value = propertyValue;
+                                                
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Organización del trabajo") //FALTA
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 18].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 18].Value = propertyValue;
+                                                
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Instrucción y Entrenamiento")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 19].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 19].Value = propertyValue;
+                                                
+                                            }
+                                            else if (moduloPregunta.Nombre_Modulo == "Asesoría y ventas")
+                                            {
+                                                string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                //Verifica si el nombre de la celda ya está en el conjunto
+                                                if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                {
+                                                    worksheet.Cells[1, 20].Value = nombreCelda;
+                                                    nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                }
+
+                                                worksheet.Cells[row, 20].Value = propertyValue;
+                                                
+                                            }
                                         }
                                         //row++;
                                         currentColumn++;
@@ -262,14 +456,14 @@ namespace apiprueba.Controllers
 
                         foreach (var evaluacion in evaluacionesDelColaborador)
                         {
-                            var usuario = await context.Usuarios.FirstOrDefaultAsync(u => u.Id_Usuario == evaluacion.Usuario_id);
-                            var cargo = await context.Cargos.FirstOrDefaultAsync(u => u.Id_Cargo == usuario.Cargo_Id);
+                            var colaborador = await context.Colaborador.FirstOrDefaultAsync(u => u.Id_Colaborador == evaluacion.Colaborador_id);
+                            var cargo = await context.Cargos.FirstOrDefaultAsync(u => u.Id_Cargo == colaborador.Cargo_Id);
 
-                            if (cargo != null && usuario != null)
+                            if (cargo != null && colaborador != null)
                             {
                                 if (cargo.Nombre_Cargo == "Jefaturas")
                                 {
-                                    if (usuario.Grupo == "JEFE")
+                                    if (colaborador.Grupo == "JEFE")
                                     {
                                         decimal? porcentajeGrupo = 0.40M;
                                         decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
@@ -284,7 +478,7 @@ namespace apiprueba.Controllers
                                         worksheet.Cells[row, 3].Value = valorCalificacion;
                                     }
 
-                                    if (usuario.Grupo == "CLIENTE")
+                                    if (colaborador.Grupo == "CLIENTE")
                                     {
                                         decimal? porcentajeGrupo = 0.40M;
                                         decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
@@ -292,7 +486,7 @@ namespace apiprueba.Controllers
                                         worksheet.Cells[row, 4].Value = valorCalificacion;
                                     }
 
-                                    if (usuario.Grupo == "EQUIPO")
+                                    if (colaborador.Grupo == "EQUIPO")
                                     {
                                         decimal? porcentajeGrupo = 0.20M;
                                         decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
@@ -303,7 +497,7 @@ namespace apiprueba.Controllers
 
                                 else if (cargo.Nombre_Cargo == "Supervisores" || cargo.Nombre_Cargo == "Gestor")
                                 {
-                                    if (usuario.Grupo == "JEFE")
+                                    if (colaborador.Grupo == "JEFE")
                                     {
                                         decimal? porcentajeGrupo = 0.60M;
                                         decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;
@@ -311,7 +505,7 @@ namespace apiprueba.Controllers
                                         worksheet.Cells[row, 3].Value = valorCalificacion;
                                     }
 
-                                    if (usuario.Grupo == "EQUIPO")
+                                    if (colaborador.Grupo == "EQUIPO")
                                     {
                                         decimal? porcentajeGrupo = 0.40M;
                                         decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
@@ -322,7 +516,7 @@ namespace apiprueba.Controllers
 
                                 else if (cargo.Nombre_Cargo == "Coordinador")
                                 {
-                                    if (usuario.Grupo == "JEFE")
+                                    if (colaborador.Grupo == "JEFE")
                                     {
                                         decimal? porcentajeGrupo = 0.60M;
                                         decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;
@@ -330,7 +524,7 @@ namespace apiprueba.Controllers
                                         worksheet.Cells[row, 3].Value = valorCalificacion;
                                     }
 
-                                    if (usuario.Grupo == "CLIENTE")
+                                    if (colaborador.Grupo == "CLIENTE")
                                     {
                                         decimal? porcentajeGrupo = 0.40M;
                                         decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
@@ -341,7 +535,7 @@ namespace apiprueba.Controllers
 
                                 else if (cargo.Nombre_Cargo == "Analista" || cargo.Nombre_Cargo == "Vendedor" || cargo.Nombre_Cargo == "Auxiliar")
                                 {
-                                    if (usuario.Grupo == "JEFE")
+                                    if (colaborador.Grupo == "JEFE")
                                     {
                                         decimal? porcentajeGrupo = 1.00M;
                                         decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;
@@ -352,7 +546,7 @@ namespace apiprueba.Controllers
 
                                 else if (cargo.Nombre_Cargo == "Administrador")
                                 {
-                                    if (usuario.Grupo == "JEFE")
+                                    if (colaborador.Grupo == "JEFE")
                                     {
                                         decimal? porcentajeGrupo = 0.50M;
                                         decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;
@@ -360,7 +554,7 @@ namespace apiprueba.Controllers
                                         worksheet.Cells[row, 3].Value = valorCalificacion;
                                     }
 
-                                    if (usuario.Grupo == "EQUIPO")
+                                    if (colaborador.Grupo == "EQUIPO")
                                     {
                                         decimal? porcentajeGrupo = 0.50M;
                                         decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo;//ej 5*40% = 2
@@ -369,13 +563,708 @@ namespace apiprueba.Controllers
                                     }
                                 }
 
-                                string usuarioNombre = usuario.Usuario;
+                                //string usuarioNombre = usuario.Usuario;
 
                             }
                         }
                         
                         calificacionFinal += valorResultante;
                         worksheet.Cells[row, 6].Value = calificacionFinal;
+
+                        row++;
+                    }
+
+                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                    result = package.GetAsByteArray();
+                }
+
+                if (result != null)
+                {
+                    // Devolver el archivo Excel
+                    return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Evaluaciones.xlsx");
+
+                }
+                else
+                {
+                    return BadRequest("Ocurrio un error al generar el archivo");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al generar el archivo Excel." + ex.Message);
+            }
+        }
+
+        //Metodo para la exportacion del archivo excel de la tabla Evaluaciones
+
+        [HttpGet("detalladoAcumulado")]
+        async public Task<IActionResult> DetalladoAcumulado([FromQuery] string estadosSeleccionados)
+        {
+            try
+            {
+                List<string> estados = estadosSeleccionados.Split(',').ToList();
+
+                byte[] result = null;
+
+                var evaluaciones = context.Evaluacion.ToList();
+
+                if (estados != null && estados.Count > 0)
+                {
+                    evaluaciones = evaluaciones.Where(c => estados.Contains(c.Estado)).ToList();
+                }
+
+                var colaboradoresIds = evaluaciones.Select(evaluacion => evaluacion.Colaborador_id).Distinct().ToList();
+
+                var colaboradores = await context.Colaborador
+                    .Where(colaborador => colaboradoresIds.Contains(colaborador.Id_Colaborador))
+                    .ToListAsync();
+
+                var evaluacionesAgrupadas = evaluaciones
+                    .GroupBy(evaluacion => colaboradores.FirstOrDefault(colaborador => colaborador.Id_Colaborador == evaluacion.Colaborador_id)?.Nombres)
+                    .Select(grupo => new {
+                        ColaboradorNombre = grupo.Key,
+                        Evaluaciones = grupo.ToList(),
+                        ColaboradorIdentificacion = colaboradores.FirstOrDefault(colaborador => colaborador.Nombres == grupo.Key)?.Cedula,
+                    })
+                    .ToList();
+
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Evaluaciones");
+
+                    // Agregar encabezados
+                    worksheet.Cells[1, 1].Value = "Evaluado";
+                    worksheet.Cells[1, 2].Value = "Identificacion del Evaluado";
+                    worksheet.Cells[1, 3].Value = "JEFE";
+                    worksheet.Cells[1, 4].Value = "CLIENTE";
+                    worksheet.Cells[1, 5].Value = "EQUIPO";
+                    worksheet.Cells[1, 6].Value = "Calificacion Final";
+
+                    int row = 2; // Fila donde comenzar a agregar datos
+
+                    foreach (var grupo in evaluacionesAgrupadas)
+                    {
+                        var colaboradorNombre = grupo.ColaboradorNombre;
+                        var evaluacionesDelColaborador = grupo.Evaluaciones;
+
+                        worksheet.Cells[row, 1].Value = colaboradorNombre;
+                        worksheet.Cells[row, 2].Value = grupo.ColaboradorIdentificacion;
+                        decimal? calificacionFinal = 0;
+                        decimal? valorResultante = 0;
+
+                        //Contadores de las veces que ingresa por competencia en todas las evaluaciones
+                        int contCompetencia1 = 0;
+                        int contCompetencia2 = 0;
+                        int contCompetencia3 = 0;
+                        int contCompetencia4 = 0;
+                        int contCompetencia5 = 0;
+                        int contCompetencia6 = 0;
+                        int contCompetencia7 = 0;
+                        int contCompetencia8 = 0;
+                        int contCompetencia9 = 0;
+                        int contCompetencia10 = 0;
+                        int contCompetencia11 = 0;
+                        int contCompetencia12 = 0;
+                        int contCompetencia13 = 0;
+
+                        //Contadores para los grupos segun el cargo del colaborador
+                        //No se considera grupo1 ya que solo sera evaluado por un solo jefe y no varios 
+    
+                        int contGrupo2 = 0;
+                        int contGrupo3 = 0;
+
+                        //Acumulado o suma de todos los grupos por las evaluaciones del colaborador
+                        decimal? grupo1 = 0;
+                        decimal? grupo2 = 0;
+                        decimal? grupo3 = 0;
+
+                        //Acumulado o suma de todas las evaluaciones del colaborador respecto a una competencia especifica
+                        decimal competencia1 = 0;
+                        decimal competencia2 = 0;
+                        decimal competencia3 = 0;
+                        decimal competencia4 = 0;
+                        decimal competencia5 = 0;
+                        decimal competencia6 = 0;
+                        decimal competencia7 = 0;
+                        decimal competencia8 = 0;
+                        decimal competencia9 = 0;
+                        decimal competencia10 = 0;
+                        decimal competencia11 = 0;
+                        decimal competencia12 = 0;
+                        decimal competencia13 = 0;
+
+                        decimal porcentajeGrupo = 0M;
+
+                        
+
+                        HashSet<string> nombresCeldasCreadas = new HashSet<string>(); // Para rastrear los nombres de las celdas creadas
+
+                        foreach (var evaluacion in evaluacionesDelColaborador)
+                        {
+                            var colaborador = await context.Colaborador.FirstOrDefaultAsync(u => u.Id_Colaborador == evaluacion.Colaborador_id);
+                            var cargo = await context.Cargos.FirstOrDefaultAsync(u => u.Id_Cargo == colaborador.Cargo_Id);
+                            
+                            if (cargo != null && colaborador != null)
+                            {
+                                if (cargo.Nombre_Cargo == "Jefaturas")
+                                {
+                                    if (colaborador.Grupo == "JEFE")
+                                    {
+                                        porcentajeGrupo = 0.40M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                                                                                                    //decimal? valorMaximo = 5;
+
+                                        //decimal? porcentajeOriginal = (valorResultante / valorMaximo) * 100;
+
+                                        //Console.WriteLine($"Valor Resultante: {valorResultante} => Porcentaje Original: {porcentajeOriginal}%");
+                                        //valorResultante += valorCalificacion;
+
+
+                                        grupo1 = valorCalificacion;
+
+                                        
+                                       // worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+
+                                    if (colaborador.Grupo == "CLIENTE")
+                                    {
+                                        porcentajeGrupo = 0.40M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5 ;//ej 5*40% = 2
+                                        //valorResultante += valorCalificacion;
+
+
+                                        grupo2 += valorCalificacion;
+                                        contGrupo2++;
+                                       // worksheet.Cells[row, 4].Value = valorCalificacion;
+                                    }
+
+                                    if (colaborador.Grupo == "EQUIPO")
+                                    {
+                                        porcentajeGrupo = 0.20M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5 ;//ej 5*40% = 2
+                                        //valorResultante += valorCalificacion;
+
+                                        grupo3 += valorCalificacion;
+                                        contGrupo3++;
+                                       // worksheet.Cells[row, 5].Value = valorCalificacion;
+                                    }
+                                }
+
+                                else if (cargo.Nombre_Cargo == "Supervisores" || cargo.Nombre_Cargo == "Gestor")
+                                {
+                                    if (colaborador.Grupo == "JEFE")
+                                    {
+                                        porcentajeGrupo = 0.60M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;
+                                        //valorResultante += valorCalificacion;
+
+                                        grupo1 = valorCalificacion;
+                                        //worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+
+                                    if (colaborador.Grupo == "EQUIPO")
+                                    {
+                                        porcentajeGrupo = 0.40M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5 ;//ej 5*40% = 2
+                                        //valorResultante += valorCalificacion;
+
+                                        grupo3 += valorCalificacion;
+                                        contGrupo3++;
+                                        //worksheet.Cells[row, 5].Value = valorCalificacion;
+                                    }
+                                }
+
+                                else if (cargo.Nombre_Cargo == "Coordinador")
+                                {
+                                    if (colaborador.Grupo == "JEFE")
+                                    {
+                                        porcentajeGrupo = 0.60M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;
+                                        //valorResultante += valorCalificacion;
+
+                                        grupo1 = valorCalificacion;
+                                       // worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+
+                                    if (colaborador.Grupo == "CLIENTE")
+                                    {
+                                        porcentajeGrupo = 0.40M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                        //valorResultante += valorCalificacion;
+
+                                        grupo2 += valorCalificacion;
+                                        contGrupo2++;
+                                        //worksheet.Cells[row, 4].Value = valorCalificacion;
+                                    }
+                                }
+
+                                else if (cargo.Nombre_Cargo == "Analista" || cargo.Nombre_Cargo == "Vendedor" || cargo.Nombre_Cargo == "Auxiliar")
+                                {
+                                    if (colaborador.Grupo == "JEFE")
+                                    {
+                                        porcentajeGrupo = 1.00M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;
+                                        //valorResultante += valorCalificacion;
+
+                                        grupo1 = valorCalificacion;
+                                        //worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+                                }
+
+                                else if (cargo.Nombre_Cargo == "Administrador")
+                                {
+                                    if (colaborador.Grupo == "JEFE")
+                                    {
+                                        porcentajeGrupo = 0.50M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;
+                                        //valorResultante += valorCalificacion;
+
+                                        grupo1 = valorCalificacion;
+                                        //worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+
+                                    if (colaborador.Grupo == "EQUIPO")
+                                    {
+                                        porcentajeGrupo = 0.50M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5 ;//ej 5*40% = 2
+                                        //valorResultante += valorCalificacion;
+
+
+                                        grupo3 += valorCalificacion;
+                                        contGrupo3++;
+                                        //worksheet.Cells[row, 5].Value = valorCalificacion;
+                                    }
+                                }
+
+                                //string usuarioNombre = usuario.Usuario;
+                                var preguntaModuloResult = await moduloPreguntasService.ObtenerModulosConPreguntas(colaborador.Cargo_Id);
+
+                                //int currentColumn = 7; // Inicializar en la columna 7
+
+                                if (preguntaModuloResult != null)
+                                {
+                                    foreach (var moduloPregunta in preguntaModuloResult)
+                                    {
+                                        if (moduloPregunta.PreguntasByEvaluacionModel != null && moduloPregunta.PreguntasByEvaluacionModel.Count > 0)
+                                        {
+                                            var preguntaByEvaluacion = moduloPregunta.PreguntasByEvaluacionModel[0];
+
+                                            var pregunta = preguntaByEvaluacion.Pregunta;
+                                            var numeroPregunta = preguntaByEvaluacion.Numero_Pregunta;
+
+                                            //var clfFinal = evaluacion.CalificacionFinal;
+
+                                            string propertyName = $"Clfc_Pregunta{numeroPregunta}";
+
+                                            // Se utiliza reflexión para acceder a la propiedad de evaluación
+                                            var propertyInfo = evaluacion.GetType().GetProperty(propertyName);
+                                            if (propertyInfo != null)
+                                            {
+                                                var propertyValue = propertyInfo.GetValue(evaluacion);
+                                                if (moduloPregunta.Nombre_Modulo == "Orientación al Servicio")
+                                                {
+                                                    //worksheet.Cells[1, 7].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 7].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia1 += valueConGrupo;
+                                                    contCompetencia1++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Trabajo en Equipo")
+                                                {
+                                                    //worksheet.Cells[1, 8].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 8].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia2 += valueConGrupo;
+                                                    contCompetencia2++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Orientación a los Resultados")
+                                                {
+                                                    //worksheet.Cells[1, 9].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 9].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia3 += valueConGrupo;
+                                                    contCompetencia3++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Diversidad e Inclusión")
+                                                {
+                                                    //worksheet.Cells[1, 10].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 10].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia4 += valueConGrupo;
+                                                    contCompetencia4++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Pensamiento creativo e innovador")
+                                                {
+                                                    //worksheet.Cells[1, 11].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 11].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia5 += valueConGrupo;
+                                                    contCompetencia5++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Liderazgo")
+                                                {
+                                                    //worksheet.Cells[1, 12].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 12].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia6 += valueConGrupo;
+                                                    contCompetencia6++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Planificación, seguimiento y control")
+                                                {
+                                                    //worksheet.Cells[1, 13].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 13].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia7 += valueConGrupo;
+                                                    contCompetencia7++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
+                                                {
+                                                    //worksheet.Cells[1, 14].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 14].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia8 += valueConGrupo;
+                                                    contCompetencia8++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Responsabilidad")
+                                                {
+                                                    //worksheet.Cells[1, 15].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 15].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia9 += valueConGrupo;
+                                                    contCompetencia9++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Pensamiento Analítico")
+                                                {
+                                                    //worksheet.Cells[1, 16].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 16].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia10 += valueConGrupo;
+                                                    contCompetencia10++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Organización del trabajo") //FALTA
+                                                {
+                                                    //worksheet.Cells[1, 17].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 17].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia11 += valueConGrupo;
+                                                    contCompetencia11++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Instrucción y Entrenamiento")
+                                                {
+                                                    //worksheet.Cells[1, 18].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 18].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia12 += valueConGrupo;
+                                                    contCompetencia12++;
+                                                }
+                                                else if (moduloPregunta.Nombre_Modulo == "Asesoría y ventas")
+                                                {
+                                                    //worksheet.Cells[1, 19].Value = moduloPregunta.Nombre_Modulo;
+
+                                                    string nombreCelda = moduloPregunta.Nombre_Modulo;
+
+                                                    //Verifica si el nombre de la celda ya está en el conjunto
+                                                    if (!nombresCeldasCreadas.Contains(nombreCelda))
+                                                    {
+                                                        worksheet.Cells[1, 19].Value = nombreCelda;
+                                                        nombresCeldasCreadas.Add(nombreCelda); // Agrega el nombre a la lista de nombres creados
+
+                                                    }
+
+                                                    decimal valueConGrupo = (decimal)propertyValue * porcentajeGrupo;
+                                                    valueConGrupo = Math.Round(valueConGrupo, 2);
+                                                    competencia13 += valueConGrupo;
+                                                    contCompetencia13++;
+                                                }
+                                                //var propertyValue = propertyInfo.GetValue(evaluacion);
+                                            }
+                                            //row++;
+                                            //currentColumn++;
+                                        }
+
+                                        
+
+                                    }
+
+     
+                                }
+
+                            }
+                        }
+
+
+                        if (competencia1 != 0 && contCompetencia1 != 0)
+                        {
+                            decimal acumulado1 = (competencia1 / contCompetencia1) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado1 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 7].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia2 != 0 && contCompetencia2 != 0)
+                        {
+                            decimal acumulado2 = competencia2 / contCompetencia2 / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado2 * 100;
+                            //int porcentajeEntero = (int)Math.Floor(porcentaje); // Redondear hacia abajo
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 8].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+
+                        if (competencia3 != 0 && contCompetencia3 != 0)
+                        {
+                            decimal acumulado3 = (competencia3 / contCompetencia3) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado3 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 9].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia4 != 0 && contCompetencia3 != 0)
+                        {
+                            decimal acumulado4 = (competencia4 / contCompetencia4) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado4 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 10].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia5 != 0 && contCompetencia5 != 0)
+                        {
+                            decimal acumulado5 = (competencia5 / contCompetencia5) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado5 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 11].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia6 != 0 && contCompetencia6 != 0)
+                        {
+                            decimal acumulado6 = (competencia6 / contCompetencia6) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado6 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 12].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia7 != 0 && contCompetencia7 != 0)
+                        {
+                            decimal acumulado7 = (competencia7 / contCompetencia7) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado7 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 13].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia8 != 0 && contCompetencia8 != 0)
+                        {
+                            decimal acumulado8 = (competencia8 / contCompetencia8) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado8 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 14].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia9 != 0 && contCompetencia9 != 0)
+                        {
+                            decimal acumulado9 = (competencia9 / contCompetencia9) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado9 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 15].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia10 != 0 && contCompetencia10 != 0)
+                        {
+                            decimal acumulado10 = (competencia10 / contCompetencia10) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado10 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 16].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia11 != 0 && contCompetencia11 != 0)
+                        {
+                            decimal acumulado11 = (competencia11 / contCompetencia11) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado11 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 17].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia12 != 0 && contCompetencia12 != 0)
+                        {
+                            decimal acumulado12 = (competencia12 / contCompetencia12) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado12 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 18].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (competencia13 != 0 && contCompetencia13 != 0)
+                        {
+                            decimal acumulado13 = (competencia3 / contCompetencia13) / 5; //se divide para 5 ya que es la calificacion maxima
+                            decimal porcentaje = acumulado13 * 100;
+                            decimal porcentajeRedondeado = Math.Round(porcentaje, 2); // Redondear a dos decimales
+                            worksheet.Cells[row, 19].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        decimal? calificacionFinalRoles = 0;
+
+                        if (grupo1 != 0)
+                        {
+                            decimal valorCalificacion = grupo1.Value;
+                            decimal porcentajeRedondeado = Math.Round((valorCalificacion * 100), 2); // Redondear a dos decimales
+                            //decimal? valorEntero = valorCalificacion * 100;
+                            //decimal? porcentajeRedondeado = Math.Round(valorEntero, 2); // Redondear a dos decimales
+                            calificacionFinalRoles += valorCalificacion;
+                            worksheet.Cells[row, 3].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (grupo2 != 0)
+                        {
+                            decimal valorCalificacion = grupo2.Value / contGrupo2;
+                            decimal porcentajeRedondeado = Math.Round((valorCalificacion * 100), 2); // Redondear a dos decimales
+                            calificacionFinalRoles += valorCalificacion;
+                            worksheet.Cells[row, 4].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        if (grupo3 != 0)
+                        {
+                            decimal valorCalificacion = grupo3.Value / contGrupo3;
+                            decimal porcentajeRedondeado = Math.Round((valorCalificacion * 100), 2); // Redondear a dos decimales
+                            calificacionFinalRoles += valorCalificacion;
+                            worksheet.Cells[row, 5].Value = porcentajeRedondeado.ToString() + "%";
+                        }
+
+                        calificacionFinal = calificacionFinalRoles.Value;
+                        decimal porcentajeFinalRedondeado = Math.Round((calificacionFinal.Value * 100), 2);
+                        worksheet.Cells[row, 6].Value = porcentajeFinalRedondeado.ToString() + "%";
 
                         row++;
                     }
@@ -416,7 +1305,7 @@ namespace apiprueba.Controllers
                 decimal competenciaOrganizacional = 0M;
                 decimal competenciaEstrategica = 0M;
                 decimal competenciaFuncional = 0M;
-                var cargoUsuario = "";
+                var cargoColaborador = "";
                 observacion.Fecha_Creacion = DateTime.Now;
                 evaluacion.Fecha_Creacion = DateTime.Now;
             
@@ -442,62 +1331,62 @@ namespace apiprueba.Controllers
                     colaboradorExist.Estado = "Evaluado";
                 }
 
-                if (usuarioExist != null)
+                if (colaboradorExist != null)
                 {
-                    var cargo = await context.Cargos.FirstOrDefaultAsync(x => x.Id_Cargo == usuarioExist.Cargo_Id);
+                    var cargo = await context.Cargos.FirstOrDefaultAsync(x => x.Id_Cargo == colaboradorExist.Cargo_Id);
 
                     if (cargo != null)
                     {
                         if (cargo.Nombre_Cargo == "Jefaturas")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaEstrategica = 0.50M;
                             competenciaFuncional = 0.30M;
                         }
                         else if (cargo.Nombre_Cargo == "Supervisores")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaEstrategica = 0.40M;
                             competenciaFuncional = 0.40M;
                         }
                         else if (cargo.Nombre_Cargo == "Coordinador")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaEstrategica = 0.30M;
                             competenciaFuncional = 0.50M;
                         }
                         else if (cargo.Nombre_Cargo == "Gestor")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaEstrategica = 0.20M;
                             competenciaFuncional = 0.60M;
                         }
                         else if (cargo.Nombre_Cargo == "Analista")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaFuncional = 0.80M;
                         }
                         else if (cargo.Nombre_Cargo == "Administrador")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaEstrategica = 0.10M;
                             competenciaFuncional = 0.70M;
                         }
                         else if (cargo.Nombre_Cargo == "Vendedor")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaFuncional = 0.80M;
                         }
                         else if (cargo.Nombre_Cargo == "Auxiliar")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaFuncional = 0.80M;
                         }
@@ -512,7 +1401,7 @@ namespace apiprueba.Controllers
                 decimal? terceraCompetencia = 0M;
 
                 var preguntasCargoo = await context.PreguntasModuloCargo
-                                                .Where(x => x.Cargo_Id == usuarioExist.Cargo_Id)
+                                                .Where(x => x.Cargo_Id == colaboradorExist.Cargo_Id)
                                                 .ToListAsync();
 
                 foreach (var preguntas in preguntasCargoo)
@@ -540,7 +1429,7 @@ namespace apiprueba.Controllers
                                 Console.WriteLine($"Pregunta {pregunta.Numero_Pregunta}: {value}");
 
 
-                                if (modulo != null)
+                                if (modulo != null && value != null)
                                 {
                                     var tipoCompetencia = await context.TipoCompetencia.FirstOrDefaultAsync(x => x.Id_Tipo_Competencia == modulo.Tipo_Competencia_Id);
                                     if (tipoCompetencia != null)
@@ -548,7 +1437,7 @@ namespace apiprueba.Controllers
                                         if (tipoCompetencia.Nombre == "COMPETENCIAS ORGANIZACIONALES")
                                         {
                                                 
-                                            if (cargoUsuario == "Jefaturas")
+                                            if (cargoColaborador == "Jefaturas")
                                             {
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
                                                 {
@@ -576,7 +1465,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Supervisores")
+                                            else if (cargoColaborador == "Supervisores")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -605,7 +1494,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Coordinador")
+                                            else if (cargoColaborador == "Coordinador")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -634,7 +1523,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Gestor")
+                                            else if (cargoColaborador == "Gestor")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -663,7 +1552,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Analista")
+                                            else if (cargoColaborador == "Analista")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -692,7 +1581,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Administrador")
+                                            else if (cargoColaborador == "Administrador")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -721,7 +1610,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Vendedor" || cargoUsuario == "Auxiliar")
+                                            else if (cargoColaborador == "Vendedor" || cargoColaborador == "Auxiliar")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -753,7 +1642,7 @@ namespace apiprueba.Controllers
                                         }
                                         else if (tipoCompetencia.Nombre == "COMPETENCIAS ESTRATÉGICAS Y GESTIÓN")
                                         {
-                                            if (cargoUsuario == "Jefaturas")
+                                            if (cargoColaborador == "Jefaturas")
                                             {
                                                 if (modulo.Nombre_Modulo == "Pensamiento creativo e innovador")
                                                 {
@@ -775,7 +1664,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Supervisores")
+                                            else if (cargoColaborador == "Supervisores")
                                             {
                                                 if (modulo.Nombre_Modulo == "Pensamiento creativo e innovador")
                                                 {
@@ -796,7 +1685,7 @@ namespace apiprueba.Controllers
                                                     segundaCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Coordinador")
+                                            else if (cargoColaborador == "Coordinador")
                                             {
                                                 if (modulo.Nombre_Modulo == "Liderazgo")
                                                 {
@@ -811,7 +1700,7 @@ namespace apiprueba.Controllers
                                                     segundaCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Gestor")
+                                            else if (cargoColaborador == "Gestor")
                                             {
                                                 if (modulo.Nombre_Modulo == "Planificación, seguimiento y control")
                                                 {
@@ -820,7 +1709,7 @@ namespace apiprueba.Controllers
                                                     segundaCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Administrador")
+                                            else if (cargoColaborador == "Administrador")
                                             {
                                                 if (modulo.Nombre_Modulo == "Liderazgo")
                                                 {
@@ -841,7 +1730,7 @@ namespace apiprueba.Controllers
                                         else if (tipoCompetencia.Nombre == "COMPETENCIAS FUNCIONALES")
                                         {
 
-                                            if (cargoUsuario == "Jefaturas" || cargoUsuario == "Supervisores")
+                                            if (cargoColaborador == "Jefaturas" || cargoColaborador == "Supervisores")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
@@ -851,7 +1740,7 @@ namespace apiprueba.Controllers
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Coordinador")
+                                            else if (cargoColaborador == "Coordinador")
                                             {
                                                     
                                                 if (modulo.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
@@ -867,7 +1756,7 @@ namespace apiprueba.Controllers
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Gestor")
+                                            else if (cargoColaborador == "Gestor")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Responsabilidad")
@@ -889,7 +1778,7 @@ namespace apiprueba.Controllers
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Analista")
+                                            else if (cargoColaborador == "Analista")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
@@ -917,7 +1806,7 @@ namespace apiprueba.Controllers
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Administrador" || cargoUsuario == "Vendedor")
+                                            else if (cargoColaborador == "Administrador" || cargoColaborador == "Vendedor")
                                             {
                                                 if (modulo.Nombre_Modulo == "Responsabilidad")
                                                 {
@@ -938,7 +1827,7 @@ namespace apiprueba.Controllers
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Auxiliar")
+                                            else if (cargoColaborador == "Auxiliar")
                                             {
                                                 if (modulo.Nombre_Modulo == "Responsabilidad")
                                                 {
@@ -1024,7 +1913,7 @@ namespace apiprueba.Controllers
                 decimal competenciaOrganizacional = 0M;
                 decimal competenciaEstrategica = 0M;
                 decimal competenciaFuncional = 0M;
-                var cargoUsuario = "";
+                var cargoColaborador = "";
 
                 if (id_Evaluacion != evaluacionDtoPut.Id_Evaluacion)
                     return BadRequest("Los id no coinciden");
@@ -1040,63 +1929,64 @@ namespace apiprueba.Controllers
                     return BadRequest("Observaciones de la evaluacion no encontrada");
 
                 var usuarioExist = await context.Usuarios.FirstOrDefaultAsync(u => u.Id_Usuario == evaluacionBD.Usuario_id);
+                var colaboradorExist = await context.Colaborador.FirstOrDefaultAsync(u => u.Id_Colaborador == evaluacionBD.Colaborador_id);
 
-                if (usuarioExist != null)
+                if (colaboradorExist != null)
                 {
-                    var cargo = await context.Cargos.FirstOrDefaultAsync(x => x.Id_Cargo == usuarioExist.Cargo_Id);
+                    var cargo = await context.Cargos.FirstOrDefaultAsync(x => x.Id_Cargo == colaboradorExist.Cargo_Id);
 
                     if (cargo != null)
                     {
                         if (cargo.Nombre_Cargo == "Jefaturas")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaEstrategica = 0.50M;
                             competenciaFuncional = 0.30M;
                         }
                         else if (cargo.Nombre_Cargo == "Supervisores")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaEstrategica = 0.40M;
                             competenciaFuncional = 0.40M;
                         }
                         else if (cargo.Nombre_Cargo == "Coordinador")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaEstrategica = 0.30M;
                             competenciaFuncional = 0.50M;
                         }
                         else if (cargo.Nombre_Cargo == "Gestor")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaEstrategica = 0.20M;
                             competenciaFuncional = 0.60M;
                         }
                         else if (cargo.Nombre_Cargo == "Analista")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaFuncional = 0.80M;
                         }
                         else if (cargo.Nombre_Cargo == "Administrador")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaEstrategica = 0.10M;
                             competenciaFuncional = 0.70M;
                         }
                         else if (cargo.Nombre_Cargo == "Vendedor")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaFuncional = 0.80M;
                         }
                         else if (cargo.Nombre_Cargo == "Auxiliar")
                         {
-                            cargoUsuario = cargo.Nombre_Cargo;
+                            cargoColaborador = cargo.Nombre_Cargo;
                             competenciaOrganizacional = 0.20M;
                             competenciaFuncional = 0.80M;
                         }
@@ -1110,7 +2000,7 @@ namespace apiprueba.Controllers
                 decimal? terceraCompetencia = 0M;
 
                 var preguntasCargoo = await context.PreguntasModuloCargo
-                                                .Where(x => x.Cargo_Id == usuarioExist.Cargo_Id)
+                                                .Where(x => x.Cargo_Id == colaboradorExist.Cargo_Id)
                                                 .ToListAsync();
 
                 // Actualizar solo los campos que no sean nulos en el modelo DTO
@@ -1162,7 +2052,7 @@ namespace apiprueba.Controllers
                                 Console.WriteLine($"Pregunta {pregunta.Numero_Pregunta}: {value}");
 
 
-                                if (modulo != null)
+                                if (modulo != null && value != null)
                                 {
                                     var tipoCompetencia = await context.TipoCompetencia.FirstOrDefaultAsync(x => x.Id_Tipo_Competencia == modulo.Tipo_Competencia_Id);
                                     if (tipoCompetencia != null)
@@ -1170,7 +2060,7 @@ namespace apiprueba.Controllers
                                         if (tipoCompetencia.Nombre == "COMPETENCIAS ORGANIZACIONALES")
                                         {
 
-                                            if (cargoUsuario == "Jefaturas")
+                                            if (cargoColaborador == "Jefaturas")
                                             {
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
                                                 {
@@ -1198,7 +2088,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Supervisores")
+                                            else if (cargoColaborador == "Supervisores")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -1227,7 +2117,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Coordinador")
+                                            else if (cargoColaborador == "Coordinador")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -1256,7 +2146,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Gestor")
+                                            else if (cargoColaborador == "Gestor")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -1285,7 +2175,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Analista")
+                                            else if (cargoColaborador == "Analista")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -1314,7 +2204,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Administrador")
+                                            else if (cargoColaborador == "Administrador")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -1343,7 +2233,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Vendedor" || cargoUsuario == "Auxiliar")
+                                            else if (cargoColaborador == "Vendedor" || cargoColaborador == "Auxiliar")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Orientación al Servicio")
@@ -1375,7 +2265,7 @@ namespace apiprueba.Controllers
                                         }
                                         else if (tipoCompetencia.Nombre == "COMPETENCIAS ESTRATÉGICAS Y GESTIÓN")
                                         {
-                                            if (cargoUsuario == "Jefaturas")
+                                            if (cargoColaborador == "Jefaturas")
                                             {
                                                 if (modulo.Nombre_Modulo == "Pensamiento creativo e innovador")
                                                 {
@@ -1397,7 +2287,7 @@ namespace apiprueba.Controllers
                                                 }
                                             }
 
-                                            else if (cargoUsuario == "Supervisores")
+                                            else if (cargoColaborador == "Supervisores")
                                             {
                                                 if (modulo.Nombre_Modulo == "Pensamiento creativo e innovador")
                                                 {
@@ -1418,7 +2308,7 @@ namespace apiprueba.Controllers
                                                     segundaCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Coordinador")
+                                            else if (cargoColaborador == "Coordinador")
                                             {
                                                 if (modulo.Nombre_Modulo == "Liderazgo")
                                                 {
@@ -1433,7 +2323,7 @@ namespace apiprueba.Controllers
                                                     segundaCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Gestor")
+                                            else if (cargoColaborador == "Gestor")
                                             {
                                                 if (modulo.Nombre_Modulo == "Planificación, seguimiento y control")
                                                 {
@@ -1442,7 +2332,7 @@ namespace apiprueba.Controllers
                                                     segundaCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Administrador")
+                                            else if (cargoColaborador == "Administrador")
                                             {
                                                 if (modulo.Nombre_Modulo == "Liderazgo")
                                                 {
@@ -1463,7 +2353,7 @@ namespace apiprueba.Controllers
                                         else if (tipoCompetencia.Nombre == "COMPETENCIAS FUNCIONALES")
                                         {
 
-                                            if (cargoUsuario == "Jefaturas" || cargoUsuario == "Supervisores")
+                                            if (cargoColaborador == "Jefaturas" || cargoColaborador == "Supervisores")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
@@ -1473,7 +2363,7 @@ namespace apiprueba.Controllers
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Coordinador")
+                                            else if (cargoColaborador == "Coordinador")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
@@ -1489,7 +2379,7 @@ namespace apiprueba.Controllers
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Gestor")
+                                            else if (cargoColaborador == "Gestor")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Responsabilidad")
@@ -1511,7 +2401,7 @@ namespace apiprueba.Controllers
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Analista")
+                                            else if (cargoColaborador == "Analista")
                                             {
 
                                                 if (modulo.Nombre_Modulo == "Pensamiento crítico para la toma de decisiones")
@@ -1539,7 +2429,7 @@ namespace apiprueba.Controllers
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Administrador" || cargoUsuario == "Vendedor")
+                                            else if (cargoColaborador == "Administrador" || cargoColaborador == "Vendedor")
                                             {
                                                 if (modulo.Nombre_Modulo == "Responsabilidad")
                                                 {
@@ -1560,7 +2450,7 @@ namespace apiprueba.Controllers
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoUsuario == "Auxiliar")
+                                            else if (cargoColaborador == "Auxiliar")
                                             {
                                                 if (modulo.Nombre_Modulo == "Responsabilidad")
                                                 {

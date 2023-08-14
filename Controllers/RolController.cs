@@ -24,5 +24,17 @@ namespace apiprueba.Controllers
             var roles = await context.Roles.ToListAsync();
             return Ok(roles);
         }
+
+        [HttpGet("{id_rol}")]
+        public async Task<ActionResult> Get(int id_rol)
+        {
+            var rol = await context.Roles.FirstOrDefaultAsync(x => x.Id_Rol == id_rol);
+            if (rol == null)
+            {
+                return BadRequest("Rol no encontrado");
+            }
+
+            return Ok(rol);
+        }
     }
 }

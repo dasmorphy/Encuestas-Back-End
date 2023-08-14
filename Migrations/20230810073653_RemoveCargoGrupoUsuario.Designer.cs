@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using apiprueba;
 
@@ -11,9 +12,11 @@ using apiprueba;
 namespace apiprueba.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230810073653_RemoveCargoGrupoUsuario")]
+    partial class RemoveCargoGrupoUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,19 +67,19 @@ namespace apiprueba.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Cargo_Evaluador")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Cargo_Id")
                         .HasColumnType("int");
+
+                    b.Property<string>("Cargo_Jefe")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cedula")
                         .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<string>("Cedula_Evaluador")
+                    b.Property<string>("Cedula_Jefe")
                         .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
@@ -93,7 +96,7 @@ namespace apiprueba.Migrations
                     b.Property<DateTime>("Fe_Ingreso_Colaborador")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Fe_Ingreso_Evaluador")
+                    b.Property<DateTime>("Fe_Ingreso_Jefe")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Grupo")
@@ -110,7 +113,7 @@ namespace apiprueba.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
-                    b.Property<string>("Nombres_Evaluador")
+                    b.Property<string>("Nombres_Jefe")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -375,34 +378,6 @@ namespace apiprueba.Migrations
                     b.HasIndex("UsuariosModelId_Usuario");
 
                     b.ToTable("Evaluacion");
-                });
-
-            modelBuilder.Entity("apiprueba.Models.FechaProcesosEvaluacionModel", b =>
-                {
-                    b.Property<int>("Id_Proceso_Evaluacion")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Proceso_Evaluacion"));
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)")
-                        .HasColumnOrder(4);
-
-                    b.Property<DateTime>("Fecha_Fin")
-                        .HasColumnType("datetime2")
-                        .HasColumnOrder(3);
-
-                    b.Property<DateTime>("Fecha_Inicio")
-                        .HasColumnType("datetime2")
-                        .HasColumnOrder(2);
-
-                    b.HasKey("Id_Proceso_Evaluacion");
-
-                    b.ToTable("ProcesosEvaluacion");
                 });
 
             modelBuilder.Entity("apiprueba.Models.ModuloEvaluacionModel", b =>
