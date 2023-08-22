@@ -1,0 +1,2194 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "apiprueba, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/cargos": {
+      "get": {
+        "tags": [
+          "Cargos"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/colaborador": {
+      "get": {
+        "tags": [
+          "Colaborador"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Colaborador"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ColaboradorDtoPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/colaborador/colaboradorByUsuario/{id_usuario}": {
+      "get": {
+        "tags": [
+          "Colaborador"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_usuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/colaborador/colaboradorByIdentificacion/{cedula_colaborador}": {
+      "get": {
+        "tags": [
+          "Colaborador"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cedula_colaborador",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/colaborador/{id_colaborador}": {
+      "get": {
+        "tags": [
+          "Colaborador"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_colaborador",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Colaborador"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_colaborador",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ColaboradorDtoPut"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Colaborador"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_colaborador",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/colaborador/exportarColaboradores": {
+      "get": {
+        "tags": [
+          "Colaborador"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "estadosSeleccionados",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/colaborador/csv": {
+      "post": {
+        "tags": [
+          "Colaborador"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "file",
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/evaluacion": {
+      "get": {
+        "tags": [
+          "Evaluacion"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Evaluacion"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/EvaluacionObservacionModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/evaluacion/search/{id_Colaborador}/{id_Usuario}": {
+      "get": {
+        "tags": [
+          "Evaluacion"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_Colaborador",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "id_Usuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/evaluacion/evaluacionByUsuario/{id_usuario}": {
+      "get": {
+        "tags": [
+          "Evaluacion"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_usuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/evaluacion/exportarEvaluaciones": {
+      "get": {
+        "tags": [
+          "Evaluacion"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "estadosSeleccionados",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/evaluacion/evaluacionesRoles": {
+      "get": {
+        "tags": [
+          "Evaluacion"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "estadosSeleccionados",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/evaluacion/detalladoAcumulado": {
+      "get": {
+        "tags": [
+          "Evaluacion"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "estadosSeleccionados",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/evaluacion/{id_Evaluacion}": {
+      "put": {
+        "tags": [
+          "Evaluacion"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_Evaluacion",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/EvaluacionObservacionPut"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/evaluacion/evaluacionEstado/{id_Evaluacion}": {
+      "put": {
+        "tags": [
+          "Evaluacion"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_Evaluacion",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/EvaluacionPutDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/evaluacion/{id_evaluacion}": {
+      "delete": {
+        "tags": [
+          "Evaluacion"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_evaluacion",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/modulo": {
+      "get": {
+        "tags": [
+          "ModuloEvaluacion"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ModuloEvaluacion"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ModuloEvaluacionDtoPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/modulo/{id_modulo}": {
+      "get": {
+        "tags": [
+          "ModuloEvaluacion"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_modulo",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ModuloEvaluacion"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_modulo",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ModuloEvaluacionDtoPut"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ModuloEvaluacion"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_modulo",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/modulo/preguntasModulo/{sessionData}": {
+      "get": {
+        "tags": [
+          "ModuloEvaluacion"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sessionData",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ModuloPreguntasDtoGet"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/observacion": {
+      "get": {
+        "tags": [
+          "Observacion"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/observacion/{id_evaluacion}": {
+      "get": {
+        "tags": [
+          "Observacion"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_evaluacion",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/preguntaModuloCargo": {
+      "get": {
+        "tags": [
+          "PreguntaModuloCargo"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/preguntaModuloCargo/{id_Cargo}": {
+      "get": {
+        "tags": [
+          "PreguntaModuloCargo"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_Cargo",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ModuloPreguntasDtoGet"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/preguntasEvaluacion": {
+      "get": {
+        "tags": [
+          "PreguntasByEvaluacion"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PreguntasByEvaluacion"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/PreguntasByEvaluacionDtoPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/preguntasEvaluacion/{id_preguntaEvaluacion}": {
+      "get": {
+        "tags": [
+          "PreguntasByEvaluacion"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_preguntaEvaluacion",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/procesosEvaluacion": {
+      "get": {
+        "tags": [
+          "ProcesosEvaluacion"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ProcesosEvaluacion"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ProcesosEvaluacionDtoPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/procesosEvaluacion/ultimoRegistro": {
+      "get": {
+        "tags": [
+          "ProcesosEvaluacion"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/procesosEvaluacion/{id_proceso}": {
+      "put": {
+        "tags": [
+          "ProcesosEvaluacion"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_proceso",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ProcesosEvaluacionDtoPut"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/rol": {
+      "get": {
+        "tags": [
+          "Rol"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/rol/{id_rol}": {
+      "get": {
+        "tags": [
+          "Rol"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_rol",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/tipoEvaluacion": {
+      "get": {
+        "tags": [
+          "TipoEvaluacion"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/usuarios": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UsuarioDtoPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/usuarios/{id_usuario}": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_usuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Usuarios"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_usuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UsuarioDtoPut"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Usuarios"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id_usuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/usuarios/usuario/{usuarioString}": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuarioString",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/usuarios/variosUsuarios": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UsuarioDtoPost"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/usuarios/authenticate": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/LoginDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ColaboradorDtoPost": {
+      "type": "object",
+      "properties": {
+        "nombres": {
+          "maxLength": 30,
+          "minLength": 0,
+          "type": "string"
+        },
+        "apellidos": {
+          "maxLength": 30,
+          "minLength": 0,
+          "type": "string"
+        },
+        "estado": {
+          "maxLength": 11,
+          "minLength": 0,
+          "type": "string"
+        },
+        "fecha_Creacion": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
+    "ColaboradorDtoPut": {
+      "type": "object",
+      "properties": {
+        "id_Colaborador": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "estado": {
+          "maxLength": 11,
+          "minLength": 0,
+          "type": "string"
+        }
+      }
+    },
+    "EvaluacionObservacionModel": {
+      "type": "object",
+      "properties": {
+        "evaluacionDto": {
+          "$ref": "#/definitions/EvaluacionPostDto"
+        },
+        "observacionDto": {
+          "$ref": "#/definitions/ObservacionDtoPost"
+        }
+      }
+    },
+    "EvaluacionObservacionPut": {
+      "type": "object",
+      "properties": {
+        "evaluacionDtoPut": {
+          "$ref": "#/definitions/EvaluacionPutDto"
+        },
+        "observacionDtoPut": {
+          "$ref": "#/definitions/ObservacionDtoPut"
+        }
+      }
+    },
+    "EvaluacionPostDto": {
+      "type": "object",
+      "properties": {
+        "usuario_id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "colaborador_id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "calificacionFinal": {
+          "format": "double",
+          "type": "number"
+        },
+        "estado": {
+          "type": "string"
+        },
+        "clfc_Pregunta1": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta2": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta3": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta4": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta5": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta6": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta7": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta8": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta9": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta10": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta11": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta12": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta13": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta14": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta15": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta16": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta17": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta18": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta19": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta20": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta21": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta22": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta23": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta24": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta25": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta26": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta27": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta28": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta29": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta30": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta31": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta32": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta33": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta34": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta35": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta36": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta37": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta38": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta39": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta40": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta41": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta42": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta43": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta44": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta45": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta46": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta47": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta48": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta49": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta50": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta51": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta52": {
+          "format": "double",
+          "type": "number"
+        }
+      }
+    },
+    "EvaluacionPutDto": {
+      "type": "object",
+      "properties": {
+        "id_Evaluacion": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "calificacionFinal": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta1": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta2": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta3": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta4": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta5": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta6": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta7": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta8": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta9": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta10": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta11": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta12": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta13": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta14": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta15": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta16": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta17": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta18": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta19": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta20": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta21": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta22": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta23": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta24": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta25": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta26": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta27": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta28": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta29": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta30": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta31": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta32": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta33": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta34": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta35": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta36": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta37": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta38": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta39": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta40": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta41": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta42": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta43": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta44": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta45": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta46": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta47": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta48": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta49": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta50": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta51": {
+          "format": "double",
+          "type": "number"
+        },
+        "clfc_Pregunta52": {
+          "format": "double",
+          "type": "number"
+        },
+        "estado": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginDto": {
+      "type": "object",
+      "properties": {
+        "usuario": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "password": {
+          "maxLength": 12,
+          "minLength": 0,
+          "type": "string"
+        }
+      }
+    },
+    "ModuloEvaluacionDtoPost": {
+      "type": "object",
+      "properties": {
+        "nombre_Modulo": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "definicion": {
+          "maxLength": 300,
+          "minLength": 0,
+          "type": "string"
+        },
+        "tipo_Evaluacion_Id": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "ModuloEvaluacionDtoPut": {
+      "type": "object",
+      "properties": {
+        "id_Modulo_Evaluacion": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "nombre_Modulo": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "definicion": {
+          "maxLength": 300,
+          "minLength": 0,
+          "type": "string"
+        },
+        "tipo_Evaluacion_Id": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "ModuloEvaluacionModel": {
+      "type": "object",
+      "properties": {
+        "id_Modulo_Evaluacion": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "nombre_Modulo": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "definicion": {
+          "maxLength": 500,
+          "minLength": 0,
+          "type": "string"
+        },
+        "fecha_Creacion": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "tipo_Evaluacion_Id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "tipo_Competencia_Id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "preguntasByEvaluacion": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PreguntasByEvaluacionModel"
+          }
+        },
+        "tipoEvaluacionModel": {
+          "$ref": "#/definitions/TipoEvaluacionModel"
+        },
+        "tipoCompetencia": {
+          "$ref": "#/definitions/TipoCompetenciaModel"
+        }
+      }
+    },
+    "ModuloPreguntasDtoGet": {
+      "type": "object",
+      "properties": {
+        "id_ModuloPregunta": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "nombre_Modulo": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "definicion": {
+          "maxLength": 300,
+          "minLength": 0,
+          "type": "string"
+        },
+        "tipo_Evaluacion_Id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "preguntasByEvaluacionModel": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PreguntasByEvaluacionModel"
+          }
+        },
+        "tipoEvaluacionModel": {
+          "$ref": "#/definitions/TipoEvaluacionModel"
+        }
+      }
+    },
+    "ObservacionDtoPost": {
+      "type": "object",
+      "properties": {
+        "evaluacion_id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "observacion1": {
+          "type": "string"
+        },
+        "observacion2": {
+          "type": "string"
+        },
+        "observacion3": {
+          "type": "string"
+        },
+        "observacion4": {
+          "type": "string"
+        },
+        "observacion5": {
+          "type": "string"
+        },
+        "observacion6": {
+          "type": "string"
+        },
+        "observacion7": {
+          "type": "string"
+        },
+        "observacion8": {
+          "type": "string"
+        },
+        "observacion9": {
+          "type": "string"
+        },
+        "observacion10": {
+          "type": "string"
+        },
+        "observacion11": {
+          "type": "string"
+        },
+        "observacion12": {
+          "type": "string"
+        },
+        "observacion13": {
+          "type": "string"
+        },
+        "observacion14": {
+          "type": "string"
+        },
+        "observacion15": {
+          "type": "string"
+        },
+        "observacion16": {
+          "type": "string"
+        },
+        "observacion17": {
+          "type": "string"
+        },
+        "observacion18": {
+          "type": "string"
+        },
+        "observacion19": {
+          "type": "string"
+        },
+        "observacion20": {
+          "type": "string"
+        },
+        "observacion21": {
+          "type": "string"
+        },
+        "observacion22": {
+          "type": "string"
+        },
+        "observacion23": {
+          "type": "string"
+        },
+        "observacion24": {
+          "type": "string"
+        },
+        "observacion25": {
+          "type": "string"
+        },
+        "observacion26": {
+          "type": "string"
+        },
+        "observacion27": {
+          "type": "string"
+        },
+        "observacion28": {
+          "type": "string"
+        },
+        "observacion29": {
+          "type": "string"
+        },
+        "observacion30": {
+          "type": "string"
+        },
+        "observacion31": {
+          "type": "string"
+        },
+        "observacion32": {
+          "type": "string"
+        },
+        "observacion33": {
+          "type": "string"
+        },
+        "observacion34": {
+          "type": "string"
+        },
+        "observacion35": {
+          "type": "string"
+        },
+        "observacion36": {
+          "type": "string"
+        },
+        "observacion37": {
+          "type": "string"
+        },
+        "observacion38": {
+          "type": "string"
+        },
+        "observacion39": {
+          "type": "string"
+        },
+        "observacion40": {
+          "type": "string"
+        },
+        "observacion41": {
+          "type": "string"
+        },
+        "observacion42": {
+          "type": "string"
+        },
+        "observacion43": {
+          "type": "string"
+        },
+        "observacion44": {
+          "type": "string"
+        },
+        "observacion45": {
+          "type": "string"
+        },
+        "observacion46": {
+          "type": "string"
+        },
+        "observacion47": {
+          "type": "string"
+        },
+        "observacion48": {
+          "type": "string"
+        },
+        "observacion49": {
+          "type": "string"
+        },
+        "observacion50": {
+          "type": "string"
+        },
+        "observacion51": {
+          "type": "string"
+        },
+        "observacion52": {
+          "type": "string"
+        },
+        "fecha_Creacion": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
+    "ObservacionDtoPut": {
+      "type": "object",
+      "properties": {
+        "evaluacion_id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "observacion1": {
+          "type": "string"
+        },
+        "observacion2": {
+          "type": "string"
+        },
+        "observacion3": {
+          "type": "string"
+        },
+        "observacion4": {
+          "type": "string"
+        },
+        "observacion5": {
+          "type": "string"
+        },
+        "observacion6": {
+          "type": "string"
+        },
+        "observacion7": {
+          "type": "string"
+        },
+        "observacion8": {
+          "type": "string"
+        },
+        "observacion9": {
+          "type": "string"
+        },
+        "observacion10": {
+          "type": "string"
+        },
+        "observacion11": {
+          "type": "string"
+        },
+        "observacion12": {
+          "type": "string"
+        },
+        "observacion13": {
+          "type": "string"
+        },
+        "observacion14": {
+          "type": "string"
+        },
+        "observacion15": {
+          "type": "string"
+        },
+        "observacion16": {
+          "type": "string"
+        },
+        "observacion17": {
+          "type": "string"
+        },
+        "observacion18": {
+          "type": "string"
+        },
+        "observacion19": {
+          "type": "string"
+        },
+        "observacion20": {
+          "type": "string"
+        },
+        "observacion21": {
+          "type": "string"
+        },
+        "observacion22": {
+          "type": "string"
+        },
+        "observacion23": {
+          "type": "string"
+        },
+        "observacion24": {
+          "type": "string"
+        },
+        "observacion25": {
+          "type": "string"
+        },
+        "observacion26": {
+          "type": "string"
+        },
+        "observacion27": {
+          "type": "string"
+        },
+        "observacion28": {
+          "type": "string"
+        },
+        "observacion29": {
+          "type": "string"
+        },
+        "observacion30": {
+          "type": "string"
+        },
+        "observacion31": {
+          "type": "string"
+        },
+        "observacion32": {
+          "type": "string"
+        },
+        "observacion33": {
+          "type": "string"
+        },
+        "observacion34": {
+          "type": "string"
+        },
+        "observacion35": {
+          "type": "string"
+        },
+        "observacion36": {
+          "type": "string"
+        },
+        "observacion37": {
+          "type": "string"
+        },
+        "observacion38": {
+          "type": "string"
+        },
+        "observacion39": {
+          "type": "string"
+        },
+        "observacion40": {
+          "type": "string"
+        },
+        "observacion41": {
+          "type": "string"
+        },
+        "observacion42": {
+          "type": "string"
+        },
+        "observacion43": {
+          "type": "string"
+        },
+        "observacion44": {
+          "type": "string"
+        },
+        "observacion45": {
+          "type": "string"
+        },
+        "observacion46": {
+          "type": "string"
+        },
+        "observacion47": {
+          "type": "string"
+        },
+        "observacion48": {
+          "type": "string"
+        },
+        "observacion49": {
+          "type": "string"
+        },
+        "observacion50": {
+          "type": "string"
+        },
+        "observacion51": {
+          "type": "string"
+        },
+        "observacion52": {
+          "type": "string"
+        }
+      }
+    },
+    "PreguntasByEvaluacionDtoPost": {
+      "type": "object",
+      "properties": {
+        "modulo_Id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "pregunta": {
+          "maxLength": 250,
+          "minLength": 0,
+          "type": "string"
+        }
+      }
+    },
+    "PreguntasByEvaluacionModel": {
+      "type": "object",
+      "properties": {
+        "id_Preguntas_Tipo": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "tipo_Evaluacion_Id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "modulo_Id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "pregunta": {
+          "maxLength": 350,
+          "minLength": 0,
+          "type": "string"
+        },
+        "numero_Pregunta": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "fecha_Creacion": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "moduloEvaluacionModel": {
+          "$ref": "#/definitions/ModuloEvaluacionModel"
+        },
+        "tipoEvaluacionModel": {
+          "$ref": "#/definitions/TipoEvaluacionModel"
+        }
+      }
+    },
+    "ProcesosEvaluacionDtoPost": {
+      "type": "object",
+      "properties": {
+        "fecha_Inicio": {
+          "format": "date",
+          "type": "string"
+        },
+        "fecha_Fin": {
+          "format": "date",
+          "type": "string"
+        },
+        "estado": {
+          "type": "string"
+        }
+      }
+    },
+    "ProcesosEvaluacionDtoPut": {
+      "type": "object",
+      "properties": {
+        "id_Proceso_Evaluacion": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "estado": {
+          "type": "string"
+        }
+      }
+    },
+    "TipoCompetenciaModel": {
+      "type": "object",
+      "properties": {
+        "id_Tipo_Competencia": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "nombre": {
+          "maxLength": 60,
+          "minLength": 0,
+          "type": "string"
+        },
+        "moduloEvaluacion": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModuloEvaluacionModel"
+          }
+        }
+      }
+    },
+    "TipoEvaluacionModel": {
+      "type": "object",
+      "properties": {
+        "id_Tipo_Evaluacion": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "nombre_Tipo": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "fecha_Creacion": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "moduloEvaluacionModel": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModuloEvaluacionModel"
+          }
+        },
+        "preguntasByEvaluacionModel": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PreguntasByEvaluacionModel"
+          }
+        }
+      }
+    },
+    "UsuarioDtoPost": {
+      "type": "object",
+      "properties": {
+        "usuario": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "identificacion": {
+          "maxLength": 10,
+          "minLength": 0,
+          "type": "string"
+        },
+        "password": {
+          "maxLength": 12,
+          "minLength": 0,
+          "type": "string"
+        },
+        "rol_Id": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "UsuarioDtoPut": {
+      "type": "object",
+      "properties": {
+        "id_Usuario": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "usuario": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "identificacion": {
+          "maxLength": 10,
+          "minLength": 0,
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "rol_Id": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

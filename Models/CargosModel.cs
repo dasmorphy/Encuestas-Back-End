@@ -10,6 +10,5 @@ namespace apiprueba.Models
 
         public string Nombre_Cargo { get; set; } = null!;
 
-        public ICollection<UsuariosModel> UsuariosModel { get; set; } = new List<UsuariosModel>();
     }
 }

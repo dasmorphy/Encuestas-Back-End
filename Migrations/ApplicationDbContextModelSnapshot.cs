@@ -813,9 +813,6 @@ namespace apiprueba.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Usuario"));
 
-                    b.Property<int?>("CargosModelId_Cargo")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Fecha_Creacion")
                         .HasColumnType("datetime2");
 
@@ -826,8 +823,7 @@ namespace apiprueba.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Rol_Id")
                         .HasColumnType("int");
@@ -841,8 +837,6 @@ namespace apiprueba.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id_Usuario");
-
-                    b.HasIndex("CargosModelId_Cargo");
 
                     b.HasIndex("RolesModelId_Rol");
 
@@ -919,10 +913,6 @@ namespace apiprueba.Migrations
 
             modelBuilder.Entity("apiprueba.Models.UsuariosModel", b =>
                 {
-                    b.HasOne("apiprueba.Models.CargosModel", null)
-                        .WithMany("UsuariosModel")
-                        .HasForeignKey("CargosModelId_Cargo");
-
                     b.HasOne("apiprueba.Models.RolesModel", "RolesModel")
                         .WithMany()
                         .HasForeignKey("RolesModelId_Rol")
@@ -930,11 +920,6 @@ namespace apiprueba.Migrations
                         .IsRequired();
 
                     b.Navigation("RolesModel");
-                });
-
-            modelBuilder.Entity("apiprueba.Models.CargosModel", b =>
-                {
-                    b.Navigation("UsuariosModel");
                 });
 
             modelBuilder.Entity("apiprueba.Models.ColaboradorModel", b =>

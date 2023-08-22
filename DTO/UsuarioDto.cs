@@ -34,8 +34,6 @@ namespace apiprueba.DTO
 
         [StringLength(maximumLength: 10)]
         public string Identificacion { get; set; } = null!;
-
-        [StringLength(maximumLength: 12)]
         public string Password { get; set; } = null!;
         public int Rol_Id { get; set; }
     }

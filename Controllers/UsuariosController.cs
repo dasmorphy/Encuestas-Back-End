@@ -5,6 +5,7 @@ using apiprueba;
 using apiprueba.DTO;
 using AutoMapper;
 using Newtonsoft.Json;
+using apiprueba.Services;
 
 /*
  
@@ -21,11 +22,13 @@ namespace apiprueba.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        private readonly IHashPasswordService hashPasswordService;
 
-        public UsuariosController(ApplicationDbContext context, IMapper mapper)
+        public UsuariosController(ApplicationDbContext context, IMapper mapper, IHashPasswordService hashPasswordService)
         {
             this.context = context;
             this.mapper = mapper;
+            this.hashPasswordService = hashPasswordService;
         }
 
 
@@ -67,22 +70,42 @@ namespace apiprueba.Controllers
         [HttpPost]
         public async Task<ActionResult> Post (UsuarioDtoPost usuarioDto)
         {
-            //Se mapea los datos necesarios para realizar el insert con solo el id del colaborador
-            var usuario = mapper.Map<UsuariosModel>(usuarioDto);
-            usuario.Fecha_Creacion = DateTime.Now;
-
-            var rolModel = await context.Roles.FindAsync(usuarioDto.Rol_Id);
-            if (rolModel == null)
+            try
             {
-                return BadRequest("El rol especificado no existe");
+                //Se comprueba si el usuario ya existe
+                var usuarioExist = await context.Usuarios.SingleOrDefaultAsync(x => x.Usuario == usuarioDto.Usuario);
+
+                if (usuarioExist != null)
+                {
+                    return Conflict("El usuario ya existe");
+                }
+
+                //Se mapea los datos necesarios para realizar el insert con solo el id del colaborador
+                var usuario = mapper.Map<UsuariosModel>(usuarioDto);
+                usuario.Fecha_Creacion = DateTime.Now;
+
+                var rolModel = await context.Roles.FindAsync(usuarioDto.Rol_Id);
+                if (rolModel == null)
+                {
+                    return BadRequest("El rol especificado no existe");
+                }
+
+                //Se encripta la contraseña del usuario
+                var passHash = hashPasswordService.HashPassword(usuario.Password);
+
+                usuario.Password = passHash;
+                usuario.Rol_Id = usuarioDto.Rol_Id;
+                usuario.RolesModel = rolModel;
+
+                context.Add(usuario);
+                await context.SaveChangesAsync();
+                return Ok(usuario);
             }
-
-            usuario.Rol_Id = usuarioDto.Rol_Id;
-            usuario.RolesModel = rolModel;
-
-            context.Add(usuario);
-            await context.SaveChangesAsync();
-            return Ok(usuario);
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al guardar el usuario" + ex.Message);
+            }
+            
         }
 
 
@@ -99,12 +122,23 @@ namespace apiprueba.Controllers
         [HttpPost("authenticate")]
         public async Task<ActionResult> Authenticate(LoginDto loginDto)
         {
+            bool passHash = false;
+
             var usuario = await context.Usuarios.FirstOrDefaultAsync
             (
-                x => x.Usuario == loginDto.Usuario && x.Password == loginDto.Password
+                x => x.Usuario == loginDto.Usuario
             );
 
-            if (usuario == null)
+            if (usuario != null)
+            {
+                passHash = hashPasswordService.VerifyPassword(loginDto.Password, usuario.Password);
+
+                if (!passHash)
+                {
+                    return Unauthorized("Credenciales inválidas");
+                }
+            }
+            else
             {
                 return Unauthorized("Credenciales inválidas");
             }
@@ -148,9 +182,24 @@ namespace apiprueba.Controllers
                 return BadRequest("El rol especificado no existe");
             }
 
-            usuarioBD.Usuario = usuarioDtoPut.Usuario;
-            usuarioBD.Password = usuarioDtoPut.Password;
-            usuarioBD.Identificacion = usuarioDtoPut.Identificacion;
+            // Conservar los valores actuales de los campos si están vacíos en la solicitud
+            if (!string.IsNullOrEmpty(usuarioDtoPut.Password))
+            {
+                // Se encripta la contraseña del usuario
+                var passHash = hashPasswordService.HashPassword(usuarioDtoPut.Password);
+                usuarioBD.Password = passHash;
+            }
+
+            if (!string.IsNullOrEmpty(usuarioDtoPut.Usuario))
+            {
+                usuarioBD.Usuario = usuarioDtoPut.Usuario;
+            }
+
+            if (!string.IsNullOrEmpty(usuarioDtoPut.Identificacion))
+            {
+                usuarioBD.Identificacion = usuarioDtoPut.Identificacion;
+            }
+
             usuarioBD.Rol_Id = usuarioDtoPut.Rol_Id;
             usuarioBD.RolesModel = rolModel;
 
