@@ -30,9 +30,9 @@ namespace apiprueba.Controllers
             return Ok(colaborador);
 
         }
-
+        //Metodo que retorna la lista de colaboradores segun el rol del usuario en el modulo evaluar
         [HttpGet("colaboradorByUsuario/{id_usuario}")]
-        public async Task<ActionResult> GetColaboradorByUsuarioId(int id_usuario)
+        public IActionResult GetColaboradorByUsuarioId(int id_usuario)
         {
             // Realiza una consulta a la base de datos para obtener las evaluaciones que coinciden con los parámetros
 
@@ -51,19 +51,43 @@ namespace apiprueba.Controllers
                 return NotFound("Rol del usuario no encontrado"); 
             }
 
-            if (string.Equals(rolUsuario.Nombre_Rol, "administrador", StringComparison.OrdinalIgnoreCase))
-            {
-                var colaborador = await context.Colaborador.ToListAsync();
-
-                return Ok(colaborador);
-            }
-            else
-            {
-                var colaborador = context.Colaborador
+            //Se devuelven los colaboradores a evaluar segun la identificacion del usuario
+            var colaborador = context.Colaborador
                 .Where(e => e.Cedula_Evaluador == usuario.Identificacion)
                 .ToList();
-                return Ok(colaborador);
+            return Ok(colaborador);
+
+            //Se devuelven los colaboradores a evaluar segun la identificacion o rol admin del usuario 
+            //if (string.Equals(rolUsuario.Nombre_Rol, "administrador", StringComparison.OrdinalIgnoreCase))
+            //{
+            //    var colaborador = await context.Colaborador.ToListAsync();
+
+            //    return Ok(colaborador);
+            //}
+            //else
+            //{
+            //    var colaborador = context.Colaborador
+            //    .Where(e => e.Cedula_Evaluador == usuario.Identificacion)
+            //    .ToList();
+            //    return Ok(colaborador);
+            //}
+
+        }
+
+        //Metodo que retorna un colaborador por el numero de identificacion
+        [HttpGet("colaboradorByIdentificacion/{cedula_colaborador}")]
+        public async Task<ActionResult> GetColaboradorByIdentificacion(string cedula_colaborador)
+        {
+            // Realiza una consulta a la base de datos para obtener las evaluaciones que coinciden con los parámetros
+
+            var colaborador = await context.Colaborador.FirstOrDefaultAsync(e => e.Cedula == cedula_colaborador);
+
+            if (colaborador == null)
+            {
+                return NotFound("Colaborador no encontrado");
             }
+
+            return Ok(colaborador);
 
         }
 
@@ -168,6 +192,7 @@ namespace apiprueba.Controllers
             return Ok(colaborador);
         }
 
+        //Metodo de guardado por CSV
         [HttpPost("csv")]
         public IActionResult UploadCsv(IFormFile file)
         {
@@ -193,6 +218,7 @@ namespace apiprueba.Controllers
                 foreach (var record in records)
                 {
                     record.Estado = "No Evaluado";
+
 
                     var cargo = record.Cargo.Trim().ToLower(); // Convertir a minúsculas y eliminar espacios en blanco
 

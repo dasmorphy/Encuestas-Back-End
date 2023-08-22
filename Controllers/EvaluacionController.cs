@@ -71,24 +71,33 @@ namespace apiprueba.Controllers
                 return NotFound("Rol del usuario no encontrado");
             }
 
-            //Si el usuario tiene rol de admin se devuelve todas las evaluaciones
-            if (string.Equals(rolUsuario.Nombre_Rol, "administrador", StringComparison.OrdinalIgnoreCase))
-            {
-                var evaluaciones = await context.Evaluacion.ToListAsync();
-
-                return Ok(evaluaciones);
-            }
-            else
-            {
-                var evaluaciones = context.Evaluacion
+            var evaluaciones = context.Evaluacion
                .Where(e => e.Usuario_id == usuario.Id_Usuario)
                .ToList();
-                if (evaluaciones.Count == 0)
-                {
-                    return BadRequest("No se encontraron evaluaciones");
-                }
-                return Ok(evaluaciones);
+            if (evaluaciones.Count == 0)
+            {
+                return BadRequest("No se encontraron evaluaciones");
             }
+            return Ok(evaluaciones);
+
+            //Si el usuario tiene rol de admin se devuelve todas las evaluaciones
+            //if (string.Equals(rolUsuario.Nombre_Rol, "administrador", StringComparison.OrdinalIgnoreCase))
+            //{
+            //    var evaluaciones = await context.Evaluacion.ToListAsync();
+
+            //    return Ok(evaluaciones);
+            //}
+            //else
+            //{
+            //    var evaluaciones = context.Evaluacion
+            //   .Where(e => e.Usuario_id == usuario.Id_Usuario)
+            //   .ToList();
+            //    if (evaluaciones.Count == 0)
+            //    {
+            //        return BadRequest("No se encontraron evaluaciones");
+            //    }
+            //    return Ok(evaluaciones);
+            //}
         }
 
         //Metodo para la exportacion del archivo excel de la tabla Evaluaciones
@@ -751,7 +760,41 @@ namespace apiprueba.Controllers
                                     }
                                 }
 
-                                else if (cargo.Nombre_Cargo == "Supervisores" || cargo.Nombre_Cargo == "Gestor")
+                                else if (cargo.Nombre_Cargo == "Supervisores")
+                                {
+                                    if (colaborador.Grupo == "JEFE")
+                                    {
+                                        porcentajeGrupo = 0.50M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;
+                                        //valorResultante += valorCalificacion;
+
+                                        grupo1 = valorCalificacion;
+                                        //worksheet.Cells[row, 3].Value = valorCalificacion;
+                                    }
+                                    if (colaborador.Grupo == "CLIENTE")
+                                    {
+                                        porcentajeGrupo = 0.25M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                        //valorResultante += valorCalificacion;
+
+                                        grupo2 += valorCalificacion;
+                                        contGrupo2++;
+                                        //worksheet.Cells[row, 5].Value = valorCalificacion;
+                                    }
+
+                                    if (colaborador.Grupo == "EQUIPO")
+                                    {
+                                        porcentajeGrupo = 0.25M;
+                                        decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                        //valorResultante += valorCalificacion;
+
+                                        grupo3 += valorCalificacion;
+                                        contGrupo3++;
+                                        //worksheet.Cells[row, 5].Value = valorCalificacion;
+                                    }
+                                }
+
+                                else if (cargo.Nombre_Cargo == "Gestor")
                                 {
                                     if (colaborador.Grupo == "JEFE")
                                     {

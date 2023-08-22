@@ -51,12 +51,12 @@ builder.Services.AddScoped<IModuloPreguntasService, ModuloPreguntasService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
 
-}
+//}
 app.UseSession();
 app.UseCors("AllowWebApp");
 app.UseHttpsRedirection();
