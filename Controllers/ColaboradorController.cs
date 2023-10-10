@@ -106,7 +106,7 @@ namespace apiprueba.Controllers
         //Metodo para la exportacion del archivo excel de la tabla Colaboradores
 
         [HttpGet("exportarColaboradores")]
-        public IActionResult ExportarPersonas([FromQuery] string estadosSeleccionados)
+        public async Task<ActionResult> ExportarPersonas([FromQuery] string estadosSeleccionados)
         {
             try
             {
@@ -119,6 +119,7 @@ namespace apiprueba.Controllers
                     colaboradores = colaboradores.Where(c => estados.Contains(c.Estado)).ToList();
                 }
 
+                //var nombreCargo = colaboradores
                 string formatoFecha = "dd/MM/yyyy";
                 byte[] result;
 
@@ -141,11 +142,15 @@ namespace apiprueba.Controllers
                     worksheet.Cells[1, 11].Value = "NOMBRES DEL JEFE";
                     worksheet.Cells[1, 12].Value = "FECHA INGRESO DEL JEFE";
                     worksheet.Cells[1, 13].Value = "CARGO DEL JEFE";
-                    worksheet.Cells[1, 14].Value = "ESTADO";
+                    worksheet.Cells[1, 14].Value = "ROL";
+                    worksheet.Cells[1, 15].Value = "CARGO EVALUACION";
+                    worksheet.Cells[1, 16].Value = "ESTADO";
 
                     // Agregar datos
                     for (int i = 0; i < colaboradores.Count; i++)
                     {
+                        var nombreCargo = await context.Cargos.FirstOrDefaultAsync(x => x.Id_Cargo == colaboradores[i].Cargo_Id);
+
                         worksheet.Cells[i + 2, 1].Value = colaboradores[i].Cedula;
                         worksheet.Cells[i + 2, 2].Value = colaboradores[i].Nombres;
                         worksheet.Cells[i + 2, 3].Value = colaboradores[i].Fe_Ingreso_Colaborador;
@@ -159,7 +164,10 @@ namespace apiprueba.Controllers
                         worksheet.Cells[i + 2, 11].Value = colaboradores[i].Nombres_Evaluador;
                         worksheet.Cells[i + 2, 12].Value = colaboradores[i].Fe_Ingreso_Evaluador;
                         worksheet.Cells[i + 2, 13].Value = colaboradores[i].Cargo_Evaluador;
-                        worksheet.Cells[i + 2, 14].Value = colaboradores[i].Estado;
+                        worksheet.Cells[i + 2, 14].Value = colaboradores[i].Grupo;
+                        if(nombreCargo != null)
+                            worksheet.Cells[i + 2, 15].Value = nombreCargo.Nombre_Cargo;
+                        worksheet.Cells[i + 2, 16].Value = colaboradores[i].Estado;
 
                         worksheet.Cells[i + 2, 3].Style.Numberformat.Format = formatoFecha;
                         worksheet.Cells[i + 2, 12].Style.Numberformat.Format = formatoFecha;

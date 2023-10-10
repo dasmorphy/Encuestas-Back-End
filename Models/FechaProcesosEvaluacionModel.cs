@@ -12,11 +12,11 @@ namespace apiprueba.Models
 
         [Column(Order = 2)]
         [DataType(DataType.Date)] // Indicar que es solo la parte de la fecha
-        public DateTime Fecha_Inicio { get; set; }
+        public DateTimeOffset Fecha_Inicio { get; set; }
 
         [Column(Order = 3)]
         [DataType(DataType.Date)] // Indicar que es solo la parte de la fecha
-        public DateTime Fecha_Fin { get; set; }
+        public DateTimeOffset Fecha_Fin { get; set; }
 
         [Column(Order = 4)]
         [StringLength(maximumLength: 8)]

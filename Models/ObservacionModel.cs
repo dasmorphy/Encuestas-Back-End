@@ -6,6 +6,7 @@ namespace apiprueba.Models
     public class ObservacionModel
     {
         [Key]
+        [Column(Order = 1)]
         public int Id_Observacion { get; set; }
 
         [Column(Order = 2)]

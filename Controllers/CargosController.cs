@@ -26,5 +26,18 @@ namespace apiprueba.Controllers
             var cargos = await context.Cargos.ToListAsync();
             return Ok(cargos);
         }
+
+        //Obtiene los datos por el id cargo
+        [HttpGet("{id_cargo}")]
+        public async Task<ActionResult> Get(int id_cargo)
+        {
+            var cargo = await context.Cargos.FirstOrDefaultAsync(x => x.Id_Cargo == id_cargo);
+            if (cargo == null)
+            {
+                return BadRequest("Cargo no encontrado");
+            }
+
+            return Ok(cargo);
+        }
     }
 }

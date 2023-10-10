@@ -7,6 +7,7 @@ namespace apiprueba.Models
         public class EvaluacionModel
         {
             [Key]
+            [Column(Order = 1)]
             public int Id_Evaluacion { get; set; }
             [Column(Order = 2)]
             public int Usuario_id { get; set; } //relacion uno a muchos
@@ -153,7 +154,7 @@ namespace apiprueba.Models
             public UsuariosModel UsuariosModel { get; set; } = null!;
             public ColaboradorModel ColaboradorModel { get; set; } = null!;
             public ObservacionModel ObservacionModel { get; set; } = null!;
-        //public PreguntasByEvaluacionModel PreguntasByEvaluacionModel { get; set; } = null!;
+            //public PreguntasByEvaluacionModel PreguntasByEvaluacionModel { get; set; } = null!;
 
-    }
+        }
 }

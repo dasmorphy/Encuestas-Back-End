@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using apiprueba;
@@ -11,9 +12,11 @@ using apiprueba;
 namespace apiprueba.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230930045735_MigracionInicialPostgres")]
+    partial class MigracionInicialPostgres
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,11 +107,11 @@ namespace apiprueba.Migrations
                         .HasColumnOrder(18);
 
                     b.Property<DateTime>("Fe_Ingreso_Colaborador")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnOrder(4);
 
                     b.Property<DateTime>("Fe_Ingreso_Evaluador")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnOrder(13);
 
                     b.Property<string>("Grupo")
@@ -377,7 +380,7 @@ namespace apiprueba.Migrations
                         .HasColumnOrder(4);
 
                     b.Property<DateTime>("Fecha_Creacion")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Observacion_id")
                         .HasColumnType("integer");
@@ -413,11 +416,11 @@ namespace apiprueba.Migrations
                         .HasColumnType("character varying(8)")
                         .HasColumnOrder(4);
 
-                    b.Property<DateTimeOffset>("Fecha_Fin")
+                    b.Property<DateTime>("Fecha_Fin")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnOrder(3);
 
-                    b.Property<DateTimeOffset>("Fecha_Inicio")
+                    b.Property<DateTime>("Fecha_Inicio")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnOrder(2);
 
@@ -440,7 +443,7 @@ namespace apiprueba.Migrations
                         .HasColumnType("character varying(500)");
 
                     b.Property<DateTime>("Fecha_Creacion")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Nombre_Modulo")
                         .IsRequired()
@@ -482,7 +485,7 @@ namespace apiprueba.Migrations
                         .HasColumnOrder(2);
 
                     b.Property<DateTime>("Fecha_Creacion")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnOrder(55);
 
                     b.Property<string>("Observacion1")
@@ -711,7 +714,7 @@ namespace apiprueba.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id_Preguntas_Tipo"));
 
                     b.Property<DateTime>("Fecha_Creacion")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ModuloEvaluacionModelId_Modulo_Evaluacion")
                         .HasColumnType("integer");
@@ -774,7 +777,7 @@ namespace apiprueba.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id_Rol"));
 
                     b.Property<DateTime>("Fecha_Creacion")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Nombre_Rol")
                         .IsRequired()
@@ -815,7 +818,7 @@ namespace apiprueba.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id_Tipo_Evaluacion"));
 
                     b.Property<DateTime>("Fecha_Creacion")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Nombre_Tipo")
                         .IsRequired()
@@ -836,7 +839,7 @@ namespace apiprueba.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id_Usuario"));
 
                     b.Property<DateTime>("Fecha_Creacion")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Identificacion")
                         .IsRequired()
