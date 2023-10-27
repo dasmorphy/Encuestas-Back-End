@@ -1602,7 +1602,22 @@ namespace apiprueba.Services.Impl
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoColaborador == "Administrador" || cargoColaborador == "Vendedor")
+                                            else if (cargoColaborador == "Administrador")
+                                            {
+                                                if (modulo.Nombre_Modulo == "Organización del trabajo")
+                                                {
+                                                    decimal pesoTrabajo = 0.60M;
+                                                    value = value.Value * pesoTrabajo / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Asesoría y ventas")
+                                                {
+                                                    decimal pesoAsesorias = 0.40M;
+                                                    value = value.Value * pesoAsesorias / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                            }
+                                            else if (cargoColaborador == "Vendedor")
                                             {
                                                 if (modulo.Nombre_Modulo == "Responsabilidad")
                                                 {
@@ -2237,7 +2252,22 @@ namespace apiprueba.Services.Impl
                                                     terceraCompetencia += value;
                                                 }
                                             }
-                                            else if (cargoColaborador == "Administrador" || cargoColaborador == "Vendedor")
+                                            else if (cargoColaborador == "Administrador")
+                                            {
+                                                if (modulo.Nombre_Modulo == "Organización del trabajo")
+                                                {
+                                                    decimal pesoTrabajo = 0.60M;
+                                                    value = value.Value * pesoTrabajo / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                                if (modulo.Nombre_Modulo == "Asesoría y ventas")
+                                                {
+                                                    decimal pesoAsesorias = 0.40M;
+                                                    value = value.Value * pesoAsesorias / 5;
+                                                    terceraCompetencia += value;
+                                                }
+                                            }
+                                            else if (cargoColaborador == "Vendedor")
                                             {
                                                 if (modulo.Nombre_Modulo == "Responsabilidad")
                                                 {
@@ -2359,8 +2389,7 @@ namespace apiprueba.Services.Impl
                         evaluaciones.AddRange(colaboradorEvaluacion);
                     }
                 }
-                
-                
+
                 HashSet<string> nombresCeldasCreadas = new HashSet<string>(); // Para rastrear los nombres de las celdas creadas
 
                 //Acumulado para las calificaciones de todas las competencias
@@ -2406,6 +2435,8 @@ namespace apiprueba.Services.Impl
 
                 decimal calificacionFinal = 0;
 
+                var cargoColaborador = "";
+
                 if (evaluaciones.Count > 0)
                 {
                     foreach (var evaluacion in evaluaciones)
@@ -2414,9 +2445,11 @@ namespace apiprueba.Services.Impl
                            .Where(e => e.Id_Colaborador == evaluacion.Colaborador_id)
                            .SingleOrDefault();
                         var cargo = await context.Cargos.FirstOrDefaultAsync(u => u.Id_Cargo == colaborador.Cargo_Id);
-
+                        
                         if (cargo != null && colaborador != null)
                         {
+                            cargoColaborador = cargo.Nombre_Cargo;
+
                             if (cargo.Nombre_Cargo == "Jefaturas")
                             {
                                 if (colaborador.Grupo == "JEFE")
@@ -2796,9 +2829,7 @@ namespace apiprueba.Services.Impl
                 decimal porcentajeFinalRedondeado = Math.Round((calificacionFinal * 100), 2);
 
                 //Calculo de promedios
-                var redondeados = new Dictionary<string, decimal> { };
-
-                redondeados = new Dictionary<string, decimal>();
+                var redondeados = new Dictionary<string, object> { };
 
                 // Definir un array de clfCompetencias y contadortCompetencias
                 decimal[] clfCompetencias = { clfCompetencia1, clfCompetencia2, clfCompetencia3, clfCompetencia4, clfCompetencia5, clfCompetencia6, clfCompetencia7, clfCompetencia8, clfCompetencia9, clfCompetencia10, clfCompetencia11, clfCompetencia12, clfCompetencia13 };
@@ -2817,17 +2848,337 @@ namespace apiprueba.Services.Impl
                         redondeados.Add(clave, redondeado);
                     }
                 }
-                if (grupo1 > 0 && grupo2 > 0 && grupo3> 0)
-                {
-                    redondeados.Add("valueJefe", calificacionJefe);
-                    redondeados.Add("valueCliente", calificacionCliente);
-                    redondeados.Add("valueEquipo", calificacionEquipo);
-                    redondeados.Add("valueFinal", porcentajeFinalRedondeado);
-                }
+                
+                redondeados.Add("valueJefe", calificacionJefe);
+                redondeados.Add("valueCliente", calificacionCliente);
+                redondeados.Add("valueEquipo", calificacionEquipo);
+                redondeados.Add("valueFinal", porcentajeFinalRedondeado);
+                redondeados.Add("valueCargo", cargoColaborador);
+                
          
                 string jsonString = JsonSerializer.Serialize(redondeados);
 
                 return jsonString;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+
+            }
+        }
+
+        /*
+            autor: Daniel Males
+            since: 11-10-2023
+            version: 1.0
+            Funcion que obtiene las calificaciones de jefe, cliente y equipo de todos los colaboradores
+
+            autor: Daniel Males
+            since: 12-10-2023
+            version: 1.1
+            Se agrega parametro y logica para la busqueda de calificaciones generales por cedula del colaborador
+        */
+        async Task<object> IEvaluacionService.obtenerCalificacionGeneral(string? cedulaColaborador)
+        {
+            try
+            {
+                var evaluaciones = await context.Evaluacion.ToListAsync();
+
+                if (cedulaColaborador != "")
+                {
+                    var colaboradorByCedula = await context.Colaborador.Where(colaborador => colaborador.Cedula == cedulaColaborador).FirstAsync();
+
+
+                    var colaboradoresTotales = await context.Colaborador.Where(colaborador => colaborador.Nombres == colaboradorByCedula.Nombres).ToListAsync();
+
+                    evaluaciones.Clear();
+
+                    if (colaboradorByCedula != null)
+                    {
+                        var colaboradoresCedula = await context.Colaborador
+                            .Where(colaborador => colaborador.Nombres == colaboradorByCedula.Nombres)
+                            .ToListAsync();
+
+                        var idsColaboradores = colaboradoresCedula.Select(colaborador => colaborador.Id_Colaborador).ToList();
+
+                        // Concatena las evaluaciones de todos los colaboradores
+                        var evaluacionesConcatenadass = await context.Evaluacion
+                            .Where(evaluacion => idsColaboradores.Contains(evaluacion.Colaborador_id))
+                            .ToListAsync();
+
+                        evaluaciones.AddRange(evaluacionesConcatenadass);
+                    }
+
+                }
+
+                var colaboradoresIds = evaluaciones.Select(evaluacion => evaluacion.Colaborador_id).Distinct().ToList();
+
+                var colaboradores = await context.Colaborador
+                    .Where(colaborador => colaboradoresIds.Contains(colaborador.Id_Colaborador))
+                    .ToListAsync();
+
+                var evaluacionesAgrupadas = evaluaciones
+                    .GroupBy(evaluacion => colaboradores.FirstOrDefault(colaborador => colaborador.Id_Colaborador == evaluacion.Colaborador_id)?.Nombres)
+                    .Select(grupo => new
+                    {
+                        ColaboradorNombre = grupo.Key,
+                        Evaluaciones = grupo.ToList(),
+                        ColaboradorIdentificacion = colaboradores.FirstOrDefault(colaborador => colaborador.Nombres == grupo.Key)?.Cedula,
+                    })
+                    .ToList();
+
+                var dataCalificaciones = new Dictionary<string, decimal> { };
+                var dataCalificacionesPdf = new Dictionary<string, decimal> { };
+
+
+                string dataFinal = "";
+
+                foreach (var grupo in evaluacionesAgrupadas)
+                {
+                    var colaboradorNombre = grupo.ColaboradorNombre;
+                    var evaluacionesDelColaborador = grupo.Evaluaciones;
+
+                    decimal calificacionFinal = 0;
+
+                    //Contadores para los grupos segun el cargo del colaborador
+                    //No se considera grupo1 ya que solo sera evaluado por un solo jefe y no varios 
+
+                    int contGrupo2 = 0;
+                    int contGrupo3 = 0;
+
+                    //Acumulado o suma de todos los grupos por las evaluaciones del colaborador
+                    decimal? grupo1 = 0;
+                    decimal? grupo2 = 0;
+                    decimal? grupo3 = 0;
+
+                    decimal porcentajeGrupo = 0M;
+
+                    decimal puntajeMax = 0;
+
+                    foreach (var evaluacion in evaluacionesDelColaborador)
+                    {
+                        var colaborador = await context.Colaborador.FirstOrDefaultAsync(u => u.Id_Colaborador == evaluacion.Colaborador_id);
+                        var cargo = await context.Cargos.FirstOrDefaultAsync(u => u.Id_Cargo == colaborador.Cargo_Id);
+
+                        if (cargo != null && colaborador != null)
+                        {
+                            if (cargo.Nombre_Cargo == "Jefaturas")
+                            {
+                                if (colaborador.Grupo == "JEFE")
+                                {
+                                    porcentajeGrupo = 0.40M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                                                                                                    //decimal? valorMaximo = 5;
+
+                                    grupo1 = valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+
+                                }
+
+                                if (colaborador.Grupo == "CLIENTE")
+                                {
+                                    porcentajeGrupo = 0.40M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                                                                                                    //valorResultante += valorCalificacion;
+
+
+                                    grupo2 += valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                    contGrupo2++;
+                                }
+
+                                if (colaborador.Grupo == "EQUIPO")
+                                {
+                                    porcentajeGrupo = 0.20M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                                                                                                    //valorResultante += valorCalificacion;
+
+                                    grupo3 += valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                    contGrupo3++;
+                                }
+                            }
+
+                            else if (cargo.Nombre_Cargo == "Supervisores")
+                            {
+                                if (colaborador.Grupo == "JEFE")
+                                {
+                                    porcentajeGrupo = 0.50M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;
+                                    //valorResultante += valorCalificacion;
+
+                                    grupo1 = valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                }
+                                if (colaborador.Grupo == "CLIENTE")
+                                {
+                                    porcentajeGrupo = 0.25M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                                                                                                    //valorResultante += valorCalificacion;
+
+                                    grupo2 += valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                    contGrupo2++;
+                                }
+
+                                if (colaborador.Grupo == "EQUIPO")
+                                {
+                                    porcentajeGrupo = 0.25M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                                                                                                    //valorResultante += valorCalificacion;
+
+                                    grupo3 += valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                    contGrupo3++;
+                                }
+                            }
+
+                            else if (cargo.Nombre_Cargo == "Gestor")
+                            {
+                                if (colaborador.Grupo == "JEFE")
+                                {
+                                    porcentajeGrupo = 0.60M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;
+
+                                    grupo1 = valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                }
+
+                                if (colaborador.Grupo == "EQUIPO")
+                                {
+                                    porcentajeGrupo = 0.40M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                                                                                                    //valorResultante += valorCalificacion;
+
+                                    grupo3 += valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                    contGrupo3++;
+                                }
+                            }
+
+                            else if (cargo.Nombre_Cargo == "Coordinador")
+                            {
+                                if (colaborador.Grupo == "JEFE")
+                                {
+                                    porcentajeGrupo = 0.60M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;
+
+                                    grupo1 = valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                }
+
+                                if (colaborador.Grupo == "CLIENTE")
+                                {
+                                    porcentajeGrupo = 0.40M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                                                                                                    //valorResultante += valorCalificacion;
+
+                                    grupo2 += valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                    contGrupo2++;
+                                }
+                            }
+
+                            else if (cargo.Nombre_Cargo == "Analista" || cargo.Nombre_Cargo == "Vendedor" || cargo.Nombre_Cargo == "Auxiliar")
+                            {
+                                if (colaborador.Grupo == "JEFE")
+                                {
+                                    porcentajeGrupo = 1.00M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;
+
+                                    grupo1 = valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                }
+                            }
+
+                            else if (cargo.Nombre_Cargo == "Administrador")
+                            {
+                                if (colaborador.Grupo == "JEFE")
+                                {
+                                    porcentajeGrupo = 0.50M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;
+
+                                    grupo1 = valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                }
+
+                                if (colaborador.Grupo == "EQUIPO")
+                                {
+                                    porcentajeGrupo = 0.50M;
+                                    decimal? valorCalificacion = evaluacion.CalificacionFinal * porcentajeGrupo / 5;//ej 5*40% = 2
+                                                                                                                    //valorResultante += valorCalificacion;
+
+
+                                    grupo3 += valorCalificacion;
+                                    puntajeMax += 5 * porcentajeGrupo;
+                                    contGrupo3++;
+                                }
+                            }
+
+
+
+                        }
+                    }
+
+                    decimal? calificacionFinalRoles = 0;
+
+                    if (grupo1 != 0)
+                    {
+                        decimal valorCalificacion = grupo1.Value;
+                        calificacionFinalRoles += valorCalificacion;
+
+                        if (cedulaColaborador != "")
+                        {
+                            var redondeoCalificacion = Math.Round((valorCalificacion * 100), 2);
+                            dataCalificacionesPdf.Add("Jefe", redondeoCalificacion);
+                        }
+                    }
+
+                    if (grupo2 != 0)
+                    {
+                        decimal valorCalificacion = grupo2.Value / contGrupo2;
+                        calificacionFinalRoles += valorCalificacion;
+                        if (cedulaColaborador != "")
+                        {
+                            var redondeoCalificacion = Math.Round((valorCalificacion * 100), 2);
+                            dataCalificacionesPdf.Add("Cliente", redondeoCalificacion);
+                        }
+                    }
+
+                    if (grupo3 != 0)
+                    {
+                        decimal valorCalificacion = grupo3.Value / contGrupo3;
+                        calificacionFinalRoles += valorCalificacion;
+                        if (cedulaColaborador != "")
+                        {
+                            var redondeoCalificacion = Math.Round((valorCalificacion * 100), 2);
+                            dataCalificacionesPdf.Add("Equipo", redondeoCalificacion);
+                        }
+                    }
+
+                    if (cedulaColaborador != "")
+                    {
+                        return dataCalificacionesPdf;
+                    }
+
+                    calificacionFinal = calificacionFinalRoles.Value;
+                    decimal porcentajeFinalRedondeado = Math.Round((calificacionFinal * 100), 2); // Redondear a dos decimales
+
+                    dataCalificaciones.Add(colaboradorNombre, porcentajeFinalRedondeado);
+
+                    //Se ordenan los datos de formas asc en base al nombre del colaborador
+                    var datosOrdenados = dataCalificaciones.OrderBy(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+                    // Serializa el diccionario ordenado a JSON
+                    dataFinal = JsonSerializer.Serialize(datosOrdenados);
+
+                }
+
+                
+
+                return dataFinal;
+
 
             }
             catch (Exception ex)

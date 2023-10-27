@@ -6,6 +6,10 @@ using apiprueba.DTO;
 using AutoMapper;
 using Newtonsoft.Json;
 using apiprueba.Services;
+using apiprueba.Utils;
+using CsvHelper;
+using System.Globalization;
+using CsvHelper.Configuration;
 
 /*
  
@@ -23,12 +27,14 @@ namespace apiprueba.Controllers
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly IHashPasswordService hashPasswordService;
+        private readonly IUsuarioService usuarioService;
 
-        public UsuariosController(ApplicationDbContext context, IMapper mapper, IHashPasswordService hashPasswordService)
+        public UsuariosController(ApplicationDbContext context, IMapper mapper, IHashPasswordService hashPasswordService, IUsuarioService usuarioService)
         {
             this.context = context;
             this.mapper = mapper;
             this.hashPasswordService = hashPasswordService;
+            this.usuarioService = usuarioService;
         }
 
 
@@ -106,6 +112,97 @@ namespace apiprueba.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al guardar el usuario" + ex.Message);
             }
             
+        }
+
+        //[HttpPost("csv")]
+        //public async Task<ActionResult> Post(IFormFile file) 
+        //{
+        //    try
+        //    {
+        //        if (file == null || file.Length == 0)
+        //        {
+        //            throw new Exception("Archivo no seleccionado o vacío.");
+        //        }
+
+        //        // Procesa el archivo CSV y almacena los datos en la tabla existente
+        //        using var streamReader = new StreamReader(file.OpenReadStream(), System.Text.Encoding.UTF8);
+        //        using var csvReader = new CsvReader(streamReader, new CsvConfiguration(CultureInfo.InvariantCulture)
+        //        {
+        //            Delimiter = ";",
+        //            HasHeaderRecord = false,
+        //            MissingFieldFound = null
+        //        });
+
+        //        var records = csvReader.GetRecords<UsuariosModel>().ToList();
+
+        //        foreach (var record in records)
+        //        {
+        //            //Se comprueba si el usuario ya existe
+        //            var usuarioExist = await context.Usuarios.SingleOrDefaultAsync(x => x.Usuario == record.Usuario);
+
+        //            if (usuarioExist != null)
+        //            {
+        //                throw new UsuarioExisteException($"El usuario {record.Usuario} ya existe");
+        //            }
+
+        //            record.Fecha_Creacion = DateTime.Now;
+
+        //            //Se encripta la contraseña del usuario
+        //            var passHash = hashPasswordService.HashPassword(record.Password);
+        //            record.Password = passHash;
+
+        //            var rolModel = await context.Roles.FindAsync(record.Rol_Id);
+        //            if (rolModel == null)
+        //            {
+        //                throw new Exception("El rol no existe");
+        //            }
+
+        //            record.RolesModel = rolModel;
+
+        //            context.Usuarios.Add(record);
+        //        }
+
+        //        context.SaveChanges();
+
+        //        return Ok(new { message = "Archivo CSV cargado correctamente." });
+        //    }
+        //    catch (UsuarioExisteException ex)
+        //    {
+        //        return Conflict(ex.Message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, "Error al guardar a los usuarios " + ex.Message);
+        //    }
+
+
+        //}
+
+        [HttpPost("csv")]
+        public async Task<ActionResult> Post(IFormFile file)
+        {
+            RespuestaService resultado = new();
+
+            try
+            {
+                var usuarios = await usuarioService.guardarCsvUsuario(file);
+                
+                if (usuarios.Status == 409)
+                {
+                    return Conflict(usuarios.Mensaje);
+                }
+
+                resultado.Status = usuarios.Status;
+                resultado.Mensaje = usuarios.Mensaje;
+
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al guardar a los usuarios " + ex.Message);
+            }
+
+
         }
 
 

@@ -189,6 +189,20 @@ namespace apiprueba.Controllers
             
         }
 
+        //Metodo que retorna los datos del colaborador en base a su nombre
+        [HttpGet("colaboradorByNombre/{nombreColaborador}")]
+        public IActionResult GetColaboradorByNombre(string nombreColaborador)
+        {
+            var colaborador = context.Colaborador.FirstOrDefault(e => e.Nombres == nombreColaborador);
+
+            if (colaborador == null)
+            {
+                return NotFound("Colaborador no encontrado");
+            }
+
+            return Ok(colaborador);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post(ColaboradorDtoPost colaboradorDto)
         {

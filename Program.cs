@@ -62,6 +62,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IModuloPreguntasService, ModuloPreguntasService>();
 builder.Services.AddScoped<IHashPasswordService, HashPasswordService>();
 builder.Services.AddScoped<IEvaluacionService, EvaluacionServiceImpl>();
+builder.Services.AddScoped<IUsuarioService, UsuarioServiceImpl>();
+
 
 
 var app = builder.Build();

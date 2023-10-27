@@ -38,7 +38,7 @@ namespace apiprueba.Migrations
 
                     b.HasKey("Id_Cargo");
 
-                    b.ToTable("Cargos");
+                    b.ToTable("Cargos", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.ColaboradorModel", b =>
@@ -140,7 +140,7 @@ namespace apiprueba.Migrations
 
                     b.HasKey("Id_Colaborador");
 
-                    b.ToTable("Colaborador");
+                    b.ToTable("Colaborador", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.EvaluacionModel", b =>
@@ -395,7 +395,7 @@ namespace apiprueba.Migrations
 
                     b.HasIndex("UsuariosModelId_Usuario");
 
-                    b.ToTable("Evaluacion");
+                    b.ToTable("Evaluacion", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.FechaProcesosEvaluacionModel", b =>
@@ -423,7 +423,7 @@ namespace apiprueba.Migrations
 
                     b.HasKey("Id_Proceso_Evaluacion");
 
-                    b.ToTable("ProcesosEvaluacion");
+                    b.ToTable("ProcesosEvaluacion", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.ModuloEvaluacionModel", b =>
@@ -465,7 +465,7 @@ namespace apiprueba.Migrations
 
                     b.HasIndex("TipoEvaluacionModelId_Tipo_Evaluacion");
 
-                    b.ToTable("ModuloEvaluacion");
+                    b.ToTable("ModuloEvaluacion", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.ObservacionModel", b =>
@@ -698,7 +698,7 @@ namespace apiprueba.Migrations
                     b.HasIndex("Evaluacion_id")
                         .IsUnique();
 
-                    b.ToTable("ObservacionEvaluacion");
+                    b.ToTable("ObservacionEvaluacion", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.PreguntasByEvaluacionModel", b =>
@@ -740,7 +740,7 @@ namespace apiprueba.Migrations
 
                     b.HasIndex("Tipo_Evaluacion_Id");
 
-                    b.ToTable("PreguntasByEvaluacion");
+                    b.ToTable("PreguntasByEvaluacion", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.PreguntasModuloCargo", b =>
@@ -762,7 +762,7 @@ namespace apiprueba.Migrations
 
                     b.HasKey("Id_PreguntaModuloCargo");
 
-                    b.ToTable("PreguntasModuloCargo");
+                    b.ToTable("PreguntasModuloCargo", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.RolesModel", b =>
@@ -783,7 +783,7 @@ namespace apiprueba.Migrations
 
                     b.HasKey("Id_Rol");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.TipoCompetenciaModel", b =>
@@ -803,7 +803,7 @@ namespace apiprueba.Migrations
 
                     b.HasKey("Id_Tipo_Competencia");
 
-                    b.ToTable("TipoCompetencia");
+                    b.ToTable("TipoCompetencia", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.TipoEvaluacionModel", b =>
@@ -824,7 +824,7 @@ namespace apiprueba.Migrations
 
                     b.HasKey("Id_Tipo_Evaluacion");
 
-                    b.ToTable("Tipo_Evaluacion");
+                    b.ToTable("Tipo_Evaluacion", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.UsuariosModel", b =>
@@ -862,7 +862,7 @@ namespace apiprueba.Migrations
 
                     b.HasIndex("RolesModelId_Rol");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("apiprueba.Models.EvaluacionModel", b =>

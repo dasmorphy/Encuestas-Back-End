@@ -356,6 +356,24 @@ namespace apiprueba.Controllers
             }
         }
 
+        //Controller que obtiene las calificaciones de jefe, cliente y equipo de todos los colaboradores
+
+        [HttpGet("promediosGenerales")]
+        async public Task<IActionResult> ObtenerPromediosGenerales(string? cedulaColaborador = "")
+        {
+            try
+            {
+                var evaluacionesData = await evaluacionService.obtenerCalificacionGeneral(cedulaColaborador);
+                return Ok(evaluacionesData);
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los promedios." + ex.Message);
+            }
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> Post(EvaluacionObservacionModel evaluacionObservacion)

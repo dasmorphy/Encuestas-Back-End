@@ -14,6 +14,8 @@ namespace apiprueba.Services
         Task<Object> guardarEvaluacionAndObservacion(EvaluacionObservacionModel evaluacionObservacion);
 
         Task<Object> obtenerPromedioCompetencias(string? cedulaColaborador = "");
+
+        Task<Object> obtenerCalificacionGeneral(string? cedulaColaborador = "");
     
     }
 }
